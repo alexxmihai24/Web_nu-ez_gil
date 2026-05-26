@@ -13,6 +13,10 @@ interface AddToRequestButtonProps {
   quantity?: number;
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
+  /** Texto del CTA. En tarjetas estrechas usar uno corto (p. ej. "Añadir"). */
+  label?: string;
+  /** Texto cuando está agotado. En tarjetas usar uno corto (p. ej. "Consultar"). */
+  unavailableLabel?: string;
   className?: string;
 }
 
@@ -35,6 +39,8 @@ export function AddToRequestButton({
   quantity = 1,
   size = 'md',
   fullWidth = true,
+  label = 'Añadir a la solicitud',
+  unavailableLabel = 'Consultar disponibilidad',
   className,
 }: AddToRequestButtonProps) {
   const [state, setState] = useState<'idle' | 'added'>('idle');
@@ -50,14 +56,14 @@ export function AddToRequestButton({
       <a
         href={`/contacto?ref=${encodeURIComponent(productSlug)}`}
         className={cn(
-          'inline-flex items-center justify-center gap-2 rounded-md border border-brand-700 font-semibold text-brand-700 transition-colors hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40',
+          'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-brand-700 font-semibold text-brand-700 transition-colors hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40',
           sizes[size],
           fullWidth && 'w-full',
           className
         )}
       >
-        <MessageCircleQuestion className="h-[18px] w-[18px]" aria-hidden="true" />
-        Consultar disponibilidad
+        <MessageCircleQuestion className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+        {unavailableLabel}
       </a>
     );
   }
@@ -87,7 +93,7 @@ export function AddToRequestButton({
         onClick={handleAdd}
         aria-label={`Añadir ${name} a la solicitud`}
         className={cn(
-          'inline-flex items-center justify-center gap-2 rounded-md font-semibold text-white shadow-xs transition-[background-color,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/50 focus-visible:ring-offset-2',
+          'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold text-white shadow-xs transition-[background-color,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/50 focus-visible:ring-offset-2',
           state === 'added' ? 'bg-success' : 'bg-accent-500 hover:bg-accent-600 active:translate-y-px active:bg-accent-700',
           sizes[size],
           fullWidth && 'w-full',
@@ -96,11 +102,11 @@ export function AddToRequestButton({
       >
         {state === 'added' ? (
           <>
-            <Check className="h-[18px] w-[18px]" aria-hidden="true" /> Añadido
+            <Check className="h-[18px] w-[18px] shrink-0" aria-hidden="true" /> Añadido
           </>
         ) : (
           <>
-            <ShoppingCart className="h-[18px] w-[18px]" aria-hidden="true" /> Añadir a la solicitud
+            <ShoppingCart className="h-[18px] w-[18px] shrink-0" aria-hidden="true" /> {label}
           </>
         )}
       </button>

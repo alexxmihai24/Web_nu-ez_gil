@@ -92,6 +92,8 @@ export function ProductCard({ product, priority = false, sizes = DEFAULT_SIZES, 
               productSlug={product.slug}
               name={product.name}
               availability={product.availability}
+              label="Añadir"
+              unavailableLabel="Consultar"
             />
           </div>
         </div>

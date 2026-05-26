@@ -74,14 +74,15 @@ export function CategoryCard({
         ) : (
           <ImageFallback />
         )}
-        {/* Scrim azul → contraste AA del texto sobre la foto */}
+        {/* Scrim azul de doble capa → contraste AA del texto blanco incluso sobre
+            fotos claras o de fondo blanco. Se intensifica suavemente al hover. */}
         <span
-          className="absolute inset-0 bg-gradient-to-t from-brand-900/80 via-brand-900/25 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-brand-900 via-brand-900/55 to-brand-900/5 transition-colors duration-300 group-hover:from-brand-900 group-hover:via-brand-900/70"
           aria-hidden="true"
         />
       </div>
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 p-4">
-        <h3 className="text-base font-bold leading-tight text-white drop-shadow-sm">
+        <h3 className="text-base font-bold leading-tight text-white [text-shadow:0_1px_4px_rgba(2,8,23,0.6)]">
           {category.name}
         </h3>
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors group-hover:bg-accent-500">

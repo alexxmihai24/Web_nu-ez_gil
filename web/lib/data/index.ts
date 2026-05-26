@@ -1,14 +1,13 @@
 /**
  * CAPA DE DATOS — implementación del contrato (lib/data/types.ts).
  *
- * Despacho según entorno (ver dbavailable.ts):
- *   - Con DATABASE_URL  → camino Prisma/Postgres (./productdb), import diferido para
- *     no incluir @prisma/client en el bundle del camino estático.
- *   - Sin DATABASE_URL  → dataset estático de respaldo (./static-store + ./seeddata),
- *     que es lo que sirve el catálogo público mientras no se migra a Postgres.
+ * Despacho:
+ *   - Supabase configurado  → camino `./supabasedata` (supabase-js + RLS lectura pública).
+ *   - Si Supabase falla o no está configurado → dataset estático de respaldo
+ *     (`./static-store` + `./seeddata`), para que la web nunca se quede en blanco.
  *
- * Todas las funciones devuelven Promesas (contrato bloqueado), aunque el camino
- * estático resuelva de forma síncrona.
+ * Las páginas consumen estas firmas (contrato bloqueado). Los nombres internos del
+ * camino Supabase están en español; estas firmas se mantienen por compatibilidad.
  */
 
 import type {
@@ -20,49 +19,41 @@ import type {
   ProductListItem,
   ProductQuery,
 } from './types';
-import { hasDatabase } from './dbavailable';
+import { supabaseConfigurado } from '@/lib/supabase/cliente';
 import { getStore } from './static-store';
 import { applyQuery, normalizeTerm } from './query-utils';
+import * as sb from './supabasedata';
 
 const FEATURED_LIMIT = 12;
 
 // ---------------------------------------------------------------------------
-// Camino estático (sin DB) — derivado del dataset memoizado en static-store.ts
+// Camino estático (respaldo) — derivado del dataset memoizado en static-store.ts
 // ---------------------------------------------------------------------------
 
 function staticDepartments(): Category[] {
   return getStore().departments;
 }
-
 function staticCategoryBySlug(slug: string): Category | null {
   return getStore().categoriesBySlug.get(slug) ?? null;
 }
-
 function staticProductsByCategory(slug: string, q?: ProductQuery): Paginated<ProductListItem> {
-  const items = getStore().productsByCategorySlug.get(slug) ?? [];
-  return applyQuery(items, q);
+  return applyQuery(getStore().productsByCategorySlug.get(slug) ?? [], q);
 }
-
 function staticProductBySlug(slug: string): ProductDetail | null {
   return getStore().details.get(slug) ?? null;
 }
-
 function staticBrands(): Brand[] {
   return getStore().brands;
 }
-
 function staticFeatured(kind: Badge): ProductListItem[] {
   return getStore()
     .listItems.filter((it) => it.badges.includes(kind))
     .slice(0, FEATURED_LIMIT);
 }
-
 function staticSearch(term: string, q?: ProductQuery): Paginated<ProductListItem> {
   const store = getStore();
   let base: ProductListItem[];
-
   if (q?.brandSlug) {
-    // Página de marca: el filtro es la marca; el término (su nombre) es redundante.
     const brand = store.brandsBySlug.get(q.brandSlug);
     base = brand ? store.listItems.filter((it) => it.brandName === brand.name) : [];
   } else {
@@ -76,51 +67,47 @@ function staticSearch(term: string, q?: ProductQuery): Paginated<ProductListItem
         )
       : [];
   }
-
   return applyQuery(base, q);
 }
 
-// ---------------------------------------------------------------------------
-// API pública del contrato — despacha DB ↔ estático
-// ---------------------------------------------------------------------------
-
-export async function getDepartments(): Promise<Category[]> {
-  if (hasDatabase()) return (await import('./productdb')).dbGetDepartments();
-  return staticDepartments();
+/** Ejecuta el camino Supabase y, si lanza (p. ej. tablas aún sin crear), usa el respaldo. */
+async function conRespaldo<T>(supabasePath: () => Promise<T>, respaldo: () => T): Promise<T> {
+  if (!supabaseConfigurado) return respaldo();
+  try {
+    return await supabasePath();
+  } catch (e) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[lib/data] Supabase falló, usando dataset estático:', (e as Error).message);
+    }
+    return respaldo();
+  }
 }
 
-export async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  if (hasDatabase()) return (await import('./productdb')).dbGetCategoryBySlug(slug);
-  return staticCategoryBySlug(slug);
-}
+// ---------------------------------------------------------------------------
+// API pública del contrato
+// ---------------------------------------------------------------------------
 
-export async function getProductsByCategory(
+export function getDepartments(): Promise<Category[]> {
+  return conRespaldo(sb.obtenerDepartamentos, staticDepartments);
+}
+export function getCategoryBySlug(slug: string): Promise<Category | null> {
+  return conRespaldo(() => sb.obtenerCategoriaPorSlug(slug), () => staticCategoryBySlug(slug));
+}
+export function getProductsByCategory(
   slug: string,
   q?: ProductQuery,
 ): Promise<Paginated<ProductListItem>> {
-  if (hasDatabase()) return (await import('./productdb')).dbGetProductsByCategory(slug, q);
-  return staticProductsByCategory(slug, q);
+  return conRespaldo(() => sb.obtenerProductosPorCategoria(slug, q), () => staticProductsByCategory(slug, q));
 }
-
-export async function getProductBySlug(slug: string): Promise<ProductDetail | null> {
-  if (hasDatabase()) return (await import('./productdb')).dbGetProductBySlug(slug);
-  return staticProductBySlug(slug);
+export function getProductBySlug(slug: string): Promise<ProductDetail | null> {
+  return conRespaldo(() => sb.obtenerProductoPorSlug(slug), () => staticProductBySlug(slug));
 }
-
-export async function getBrands(): Promise<Brand[]> {
-  if (hasDatabase()) return (await import('./productdb')).dbGetBrands();
-  return staticBrands();
+export function getBrands(): Promise<Brand[]> {
+  return conRespaldo(sb.obtenerMarcas, staticBrands);
 }
-
-export async function getFeatured(kind: Badge): Promise<ProductListItem[]> {
-  if (hasDatabase()) return (await import('./productdb')).dbGetFeatured(kind);
-  return staticFeatured(kind);
+export function getFeatured(kind: Badge): Promise<ProductListItem[]> {
+  return conRespaldo(() => sb.obtenerDestacados(kind), () => staticFeatured(kind));
 }
-
-export async function searchProducts(
-  term: string,
-  q?: ProductQuery,
-): Promise<Paginated<ProductListItem>> {
-  if (hasDatabase()) return (await import('./productdb')).dbSearchProducts(term, q);
-  return staticSearch(term, q);
+export function searchProducts(term: string, q?: ProductQuery): Promise<Paginated<ProductListItem>> {
+  return conRespaldo(() => sb.buscarProductos(term, q), () => staticSearch(term, q));
 }

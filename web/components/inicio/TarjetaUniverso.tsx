@@ -50,9 +50,9 @@ export function TarjetaUniverso({
         ) : (
           <ImageFallback />
         )}
-        {/* Velo azul para contraste AA del texto sobre la foto */}
+        {/* Velo azul para contraste AA del texto sobre la foto (incl. fotos claras) */}
         <span
-          className="absolute inset-0 bg-gradient-to-t from-brand-900 via-brand-900/45 to-brand-900/5 transition-colors duration-300 group-hover:from-brand-900 group-hover:via-brand-900/55"
+          className="absolute inset-0 bg-gradient-to-t from-brand-900 via-brand-900/55 to-brand-900/5 transition-colors duration-300 group-hover:from-brand-900 group-hover:via-brand-900/70"
           aria-hidden="true"
         />
       </div>
@@ -64,7 +64,7 @@ export function TarjetaUniverso({
               {totalDepartamentos} {totalDepartamentos === 1 ? 'sección' : 'secciones'}
             </p>
           ) : null}
-          <h3 className="text-lg font-bold leading-tight text-white drop-shadow-sm lg:text-xl">
+          <h3 className="text-lg font-bold leading-tight text-white [text-shadow:0_1px_4px_rgba(2,8,23,0.6)] lg:text-xl">
             {nombre}
           </h3>
         </div>
