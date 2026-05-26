@@ -22,7 +22,14 @@ App Next.js en `web/` (Next 15 App Router + TS + Tailwind 3.4 con tokens de marc
 3. **Fase 3:** solicitud de pedido + Área Clientes (Backend + Frontend + Security).
 4. **Fase 4/5:** contenido/SEO local/lanzamiento y QA.
 
+## 🔧 GIT (IMPORTANTE — leer antes de tocar git)
+- El proyecto vive en `Trabajo_nuñez_gil/` que tiene **su PROPIO repo git dedicado** con remote `origin = https://github.com/alexxmihai24/Web_nu-ez_gil.git` (rama `main`, pusheado).
+- ⚠️ La carpeta de usuario `C:/Users/Alex` ENTERA es OTRO repo git (`origin = metalica_arroyo.git`). NO ejecutar git desde fuera de `Trabajo_nuñez_gil` para este proyecto, ni `add`/`push` en el repo padre.
+- `investigacion/data/crawl-report.json` está en `.gitignore` (contiene el token Mapbox `sk.` filtrado → GitHub lo bloquea). El cliente debería **rotar/revocar ese token** en Mapbox si sigue activo.
+
 ## ⚡ REWORK EN CURSO (2026-05-26 tarde) — ver `03-PLAN-REWORK.md`
+**HOME premium hecha y verificada** (QA visual Edge a 390/768/1280px: 0 solapamientos, 0 imágenes rotas; build verde; commit pusheado). Hecho: cimientos (z-index real que arregla el solapamiento, Inter+Archivo, atmósfera), HOME en español (`components/inicio/*`: Portada, FranjaConfianza, TarjetaUniverso, BloqueSeccion), universos con foto real, páginas `/novedades`-`/ofertas`-`/outlet`, SVGs institucionales, enlaces legales del footer corregidos.
+Pendiente: **consolidar español** en el resto de componentes (header/footer/catalog/ui aún en inglés; borrar huérfanos `components/home/{Hero,Section,ValueProps}.tsx`), **Fase C** (catálogo/ficha/marcas/buscador a premium), **Fase A Supabase** (esperando claves del cliente), GA4.
 El cliente pidió rework: **diseño industrial premium**, **Supabase nativo (`supabase-js`+RLS, se retira Prisma)**, **código TODO en español** (identificadores incluidos), responsive sin bugs.
 - **Fase A (Supabase):** EN ESPERA de que el cliente pase las claves. Preparar SQL tablas+RLS+Storage+seed + capa `lib/datos` en español.
 - **Fase B (Diseño/UI):** EN MARCHA sobre el dataset estático actual (sin BD). Agente Frontend rehaciendo sistema de diseño + HOME premium en español, mobile-first, con QA visual a 390/768/1280px. Validar estilo con el cliente antes de seguir.
