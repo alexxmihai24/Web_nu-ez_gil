@@ -1,0 +1,31 @@
+# Dependencias y artefactos de build
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Entorno y secretos (nunca subir)
+**/.env
+**/.env.local
+**/.env*.local
+
+# Base de datos local de Prisma (si quedara)
+**/prisma/*.db
+
+# QA visual y diagnóstico (capturas y scripts locales)
+web/.qa/
+web/.diag/
+
+# Volcado del crawl: contiene un token secreto Mapbox (sk.) del proveedor antiguo
+# filtrado en el HTML del sitio viejo. NO subir. Los datos útiles ya viven en
+# web/lib/data/seeddata.ts.
+investigacion/data/crawl-report.json
+
+# Logs y temporales
+*.log
+
+# Sistema operativo / editor
+.DS_Store
+Thumbs.db

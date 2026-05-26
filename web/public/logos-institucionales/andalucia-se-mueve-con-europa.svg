@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 236 48" role="img" aria-label="Andalucía se mueve con Europa">
+  <!-- PLACEHOLDER DIGNO: sustituir por el lema oficial con su tipografía si procede. -->
+  <rect x="0.5" y="0.5" width="235" height="47" rx="6" fill="#ffffff" stroke="#d6e1f5"/>
+  <circle cx="24" cy="24" r="11" fill="none" stroke="#003399" stroke-width="2"/>
+  <g fill="#ffcc00" transform="translate(24,24)">
+    <circle cx="0" cy="-6.5" r="1"/><circle cx="4.6" cy="-4.6" r="1"/><circle cx="6.5" cy="0" r="1"/><circle cx="4.6" cy="4.6" r="1"/><circle cx="0" cy="6.5" r="1"/><circle cx="-4.6" cy="4.6" r="1"/><circle cx="-6.5" cy="0" r="1"/><circle cx="-4.6" cy="-4.6" r="1"/>
+  </g>
+  <text x="44" y="22" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="700" fill="#16244e">«Andalucía se mueve</text>
+  <text x="44" y="35" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="700" fill="#16244e">con Europa»</text>
+</svg>

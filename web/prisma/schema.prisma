@@ -1,0 +1,271 @@
+// =============================================================================
+// Núñez Gil — Esquema de datos (Fase 2: catálogo público; Fase 3: pedidos B2B)
+// -----------------------------------------------------------------------------
+// PostgreSQL gestionado (Neon/Supabase). Acceso vía Prisma Client (lib/db.ts).
+//
+// Decisiones (ver agentes/backend.md §1):
+//  - Categoría jerárquica AUTO-REFERENCIADA (3 niveles: Departamento→Categoría→
+//    Subcategoría) con `path` materializado para breadcrumbs y subárbol rápido.
+//  - Producto (ficha) → ProductVariant (SKU vendible). 1 producto sin formatos = 1 variante.
+//  - Precios en CÉNTIMOS enteros, SIN IVA (decisión cliente: "I.V.A. no incluido").
+//  - Flags transversales: novedad / oferta / outlet (+ featured).
+//  - Soft-delete (`deletedAt`) en catálogo; nunca borrado físico para trazabilidad.
+//  - Modelos User / OrderRequest / OrderItem ya definidos para Fase 3 (sin lógica todavía).
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------------------------------
+// CATÁLOGO
+// ----------------------------------------------------------------------------
+
+/// Árbol de categorías auto-referenciado.
+/// level 1 = Departamento · 2 = Categoría · 3 = Subcategoría.
+model Category {
+  id          String  @id @default(cuid())
+  slug        String  @unique // único global: /quimica-industrial, /ambientadores-e-insecticidas/insecticidas
+  name        String
+  description String?
+
+  // jerarquía
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  level    Int        @default(1) // 1 | 2 | 3
+  path     String     @default("") // "quimica-industrial/ambientadores-e-insecticidas/insecticidas"
+  position Int        @default(0)
+
+  imageUrl String?
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  products ProductCategory[]
+
+  @@index([parentId])
+  @@index([path])
+  @@index([level, position])
+}
+
+model Brand {
+  id         String  @id @default(cuid())
+  slug       String  @unique
+  name       String
+  logoUrl    String?
+  isOwnBrand Boolean @default(false) // marcas propias NG (NG Química, NG Limpieza…)
+
+  isActive  Boolean   @default(true)
+  position  Int       @default(0)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  products Product[]
+
+  @@index([isOwnBrand])
+  @@index([position])
+}
+
+model Product {
+  id          String  @id @default(cuid())
+  slug        String  @unique // reutiliza el slug actual para preservar SEO
+  name        String
+  reference   String // referencia/SKU principal mostrada en la ficha ("286-V113310ER6")
+  description String?
+
+  brandId String?
+  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: SetNull)
+
+  // flags transversales (secciones Novedades / Ofertas / Outlet / Destacado)
+  isNew      Boolean @default(false)
+  isOffer    Boolean @default(false)
+  isOutlet   Boolean @default(false)
+  isFeatured Boolean @default(false)
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  variants   ProductVariant[]
+  images     ProductImage[]
+  categories ProductCategory[]
+  orderItems OrderItem[]
+
+  @@index([brandId])
+  @@index([isNew])
+  @@index([isOffer])
+  @@index([isOutlet])
+  @@index([isFeatured])
+  @@index([isActive, deletedAt])
+}
+
+/// N:M producto ↔ categoría (un producto puede estar en varias categorías).
+model ProductCategory {
+  productId  String
+  categoryId String
+  isPrimary  Boolean @default(false) // categoría canónica para breadcrumb/URL
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
+  @@index([productId, isPrimary])
+}
+
+/// SKU vendible. Si el producto solo tiene un formato, tiene 1 variante.
+model ProductVariant {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  sku          String  @unique // "286-V113310ER6"
+  ean          String?
+  packFormat   String? // "C/6", "PAQ-50 CAJA 24", "5L"
+  unitsPerPack Int     @default(1)
+
+  // precios en CÉNTIMOS, SIN IVA (precio público de catálogo)
+  priceCents     Int? // null → "Consultar precio"
+  oldPriceCents  Int? // precio tachado (badge Oferta)
+  unitPriceCents Int? // precio por unidad mostrado ("0,94 €/Unidad")
+  taxRate        Int  @default(21) // % IVA aplicable (21 / 10 / 4)
+
+  availability Availability @default(in_stock)
+  stockQty     Int          @default(0)
+
+  position  Int       @default(0)
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([productId, position])
+  @@index([sku])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  url      String // tras migración: URL en Vercel Blob / R2
+  alt      String?
+  position Int     @default(0)
+  width    Int?
+  height   Int?
+
+  @@index([productId, position])
+}
+
+/// Coincide con el contrato (lib/data/types.ts): 'in_stock' | 'on_order' | 'out_of_stock'.
+enum Availability {
+  in_stock
+  on_order
+  out_of_stock
+}
+
+// ----------------------------------------------------------------------------
+// FASE 3 — CUENTAS B2B + PEDIDOS / PRESUPUESTOS (modelos sin lógica todavía)
+// ----------------------------------------------------------------------------
+
+/// Cuenta del Área Clientes (B2B). Alta moderada (PENDING → ACTIVE por ADMIN).
+/// Contraseña con argon2id (@node-rs/argon2). Auth la implementa Security en Fase 3.
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique
+  passwordHash String? // null hasta que el cliente establece contraseña (onboarding por email)
+  companyName  String?
+  taxId        String? // CIF/NIF
+  phone        String?
+
+  status Boolean @default(false) // false = PENDING (no puede comprar) · true = ACTIVE
+  role   Role    @default(CUSTOMER)
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  orders OrderRequest[]
+
+  @@index([status])
+}
+
+enum Role {
+  CUSTOMER
+  SALES
+  ADMIN
+}
+
+/// Solicitud de pedido / presupuesto (modo B2B por defecto, sin pago online).
+model OrderRequest {
+  id     String      @id @default(cuid())
+  number String      @unique // NG-2026-00042
+  userId String?
+  user   User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  status OrderStatus @default(SUBMITTED)
+
+  // datos de contacto del solicitante (también para invitados sin cuenta)
+  contactName  String?
+  contactEmail String?
+  contactPhone String?
+  notes        String?
+
+  // totales en céntimos, sin IVA (snapshot)
+  subtotalCents Int @default(0)
+  taxCents      Int @default(0)
+  totalCents    Int @default(0)
+
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId, status])
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  DRAFT
+  SUBMITTED
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+/// Línea de pedido con snapshot inmutable (no referencia precio vivo).
+model OrderItem {
+  id      String       @id @default(cuid())
+  orderId String
+  order   OrderRequest @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // referencia débil al producto (puede dejar de existir); snapshot manda
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  skuSnapshot    String
+  nameSnapshot   String
+  qty            Int
+  unitPriceCents Int
+  taxRate        Int @default(21)
+
+  @@index([orderId])
+}

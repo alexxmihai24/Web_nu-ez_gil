@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 48" role="img" aria-label="Unión Europea — FEDER">
+  <!-- PLACEHOLDER DIGNO: sustituir por el logotipo oficial FEDER que facilite el cliente. -->
+  <rect x="0.5" y="0.5" width="247" height="47" rx="6" fill="#ffffff" stroke="#d6e1f5"/>
+  <rect x="9" y="9" width="42" height="30" rx="3" fill="#003399"/>
+  <g fill="#ffcc00" transform="translate(30,24)">
+    <circle cx="0" cy="-10" r="1.4"/><circle cx="7" cy="-7" r="1.4"/><circle cx="10" cy="0" r="1.4"/><circle cx="7" cy="7" r="1.4"/><circle cx="0" cy="10" r="1.4"/><circle cx="-7" cy="7" r="1.4"/><circle cx="-10" cy="0" r="1.4"/><circle cx="-7" cy="-7" r="1.4"/>
+  </g>
+  <text x="61" y="21" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="700" fill="#16244e">UNIÓN EUROPEA</text>
+  <text x="61" y="34" font-family="Arial, Helvetica, sans-serif" font-size="8" fill="#515c6b">Fondo Europeo de Desarrollo Regional</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" role="img" aria-label="Junta de Andalucía">
+  <!-- PLACEHOLDER DIGNO: sustituir por el logotipo oficial de la Junta de Andalucía. -->
+  <rect x="0.5" y="0.5" width="199" height="47" rx="6" fill="#ffffff" stroke="#d6e1f5"/>
+  <rect x="12" y="13" width="28" height="22" rx="2" fill="#15803d"/>
+  <path d="M16 24h20M26 17v14" stroke="#ffffff" stroke-width="1.6"/>
+  <text x="48" y="22" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="700" fill="#16244e">JUNTA DE</text>
+  <text x="48" y="35" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="700" fill="#15803d">ANDALUCÍA</text>
+</svg>
