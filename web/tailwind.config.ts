@@ -76,6 +76,7 @@ const config: Config = {
         autosuggest: '55',
         'drawer-overlay': '60',
         drawer: '70',
+        modal: '80',
       },
       keyframes: {
         'aparecer-arriba': {
