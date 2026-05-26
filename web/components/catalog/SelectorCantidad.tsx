@@ -13,7 +13,7 @@ interface QuantityStepperProps {
 }
 
 /** Stepper de cantidad accesible — Client island. Botones +/- ≥44px (touch AA). */
-export function QuantityStepper({
+export function SelectorCantidad({
   value,
   onChange,
   min = 1,

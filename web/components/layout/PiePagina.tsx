@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
-import { BrandMark } from '@/components/ui/BrandMark';
+import { MarcaNG } from '@/components/ui/MarcaNG';
 
 /**
  * Pie definitivo — Server Component. Columnas AYUDA / LEGAL / Contacto + marca.
@@ -41,14 +41,14 @@ const INSTITUTIONAL_LOGOS = [
   { src: '/logos-institucionales/agencia-idea.svg', alt: 'Agencia de Innovación y Desarrollo de Andalucía IDEA' },
 ];
 
-export function SiteFooter() {
+export function PiePagina() {
   return (
     <footer className="mt-20 bg-brand-900 text-ink-100">
       <div className="container-ng grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12">
         {/* Marca + contacto */}
         <div className="lg:col-span-4">
           <Link href="/" className="flex items-center gap-2" aria-label="Núñez Gil · Inicio">
-            <BrandMark className="h-9 w-9 text-white" />
+            <MarcaNG className="h-9 w-9 text-white" />
             <span className="text-xl font-extrabold tracking-tight text-white">
               núñez<span className="text-accent-400">gil</span>
             </span>

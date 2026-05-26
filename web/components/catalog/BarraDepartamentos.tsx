@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { UNIVERSES } from '@/components/layout/universes';
+import { UNIVERSOS } from '@/components/layout/universos';
 
 interface DepartmentSidebarProps {
   /** Slug del departamento activo (nivel 1) para resaltarlo. */
@@ -13,7 +13,7 @@ interface DepartmentSidebarProps {
  * departamento activo se resalta (borde izquierdo teal + fondo brand-50). Sticky en
  * lg+. Usa la capa de universos (sin fetch). Ver diseno-ui.md §5.2.
  */
-export function DepartmentSidebar({ activeSlug, className }: DepartmentSidebarProps) {
+export function BarraDepartamentos({ activeSlug, className }: DepartmentSidebarProps) {
   return (
     <aside aria-label="Departamentos" className={cn('lg:sticky lg:top-[180px]', className)}>
       <nav className="rounded-lg border border-ink-200 bg-white p-2">
@@ -21,7 +21,7 @@ export function DepartmentSidebar({ activeSlug, className }: DepartmentSidebarPr
           Departamentos
         </p>
         <ul className="space-y-4 px-1 pb-1">
-          {UNIVERSES.map((universe) => (
+          {UNIVERSOS.map((universe) => (
             <li key={universe.id}>
               <p className="px-2 text-2xs font-semibold uppercase tracking-wide text-brand-600">
                 {universe.name}

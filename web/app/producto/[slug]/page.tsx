@@ -5,13 +5,13 @@ import { Truck, ShieldCheck, Phone } from 'lucide-react';
 import { getProductBySlug } from '@/lib/data';
 import { env } from '@/lib/env';
 import { formatPrice } from '@/lib/utils';
-import { Container } from '@/components/ui/Container';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Heading } from '@/components/ui/Heading';
-import { Badge, AvailabilityBadge } from '@/components/ui/Badge';
-import { Price } from '@/components/ui/Price';
-import { ProductGallery } from '@/components/catalog/ProductGallery';
-import { ProductBuyBox } from '@/components/catalog/ProductBuyBox';
+import { Contenedor } from '@/components/ui/Contenedor';
+import { MigasDePan } from '@/components/ui/MigasDePan';
+import { Titulo } from '@/components/ui/Titulo';
+import { Badge, InsigniaDisponibilidad } from '@/components/ui/Badge';
+import { Precio } from '@/components/ui/Precio';
+import { GaleriaProducto } from '@/components/catalog/GaleriaProducto';
+import { CajaCompra } from '@/components/catalog/CajaCompra';
 
 export const revalidate = 3600;
 
@@ -79,11 +79,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   };
 
   return (
-    <Container className="py-6 lg:py-8">
-      <Breadcrumbs items={breadcrumbs} />
+    <Contenedor className="py-6 lg:py-8">
+      <MigasDePan items={breadcrumbs} />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,420px)] lg:gap-12">
-        <ProductGallery images={galleryImages} alt={altText} />
+        <GaleriaProducto images={galleryImages} alt={altText} />
 
         <div className="lg:sticky lg:top-[180px] lg:self-start">
           {product.brandName ? (
@@ -92,9 +92,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </p>
           ) : null}
 
-          <Heading level={1} size="2xl" className="mt-1">
+          <Titulo level={1} size="2xl" className="mt-1">
             {product.name}
-          </Heading>
+          </Titulo>
 
           <p className="tabular mt-2 text-sm text-ink-500">Referencia: {product.reference}</p>
 
@@ -108,14 +108,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <hr className="my-5 border-ink-200" />
 
-          <Price cents={product.priceCents} oldCents={product.oldPriceCents} size="xl" />
+          <Precio cents={product.priceCents} oldCents={product.oldPriceCents} size="xl" />
 
           <div className="mt-4">
-            <AvailabilityBadge availability={product.availability} className="text-sm" />
+            <InsigniaDisponibilidad availability={product.availability} className="text-sm" />
           </div>
 
           <div className="mt-6">
-            <ProductBuyBox
+            <CajaCompra
               productId={product.id}
               productSlug={product.slug}
               name={product.name}
@@ -145,9 +145,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       {product.description || (product.specs && product.specs.length > 0) ? (
         <section className="mt-12 max-w-3xl">
-          <Heading level={2} size="xl">
+          <Titulo level={2} size="xl">
             Detalles del producto
-          </Heading>
+          </Titulo>
           {product.description ? (
             <p className="mt-4 whitespace-pre-line text-ink-700">{product.description}</p>
           ) : null}
@@ -178,6 +178,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {product.priceCents != null ? (
         <p className="sr-only">Precio: {formatPrice(product.priceCents)}, I.V.A. no incluido.</p>
       ) : null}
-    </Container>
+    </Contenedor>
   );
 }

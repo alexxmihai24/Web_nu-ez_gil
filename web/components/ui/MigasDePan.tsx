@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { env } from '@/lib/env';
 
-export interface Crumb {
+export interface Miga {
   name: string;
   /** Ruta absoluta del sitio (p. ej. "/quimica-industrial"). El último puede omitirse. */
   href?: string;
@@ -12,8 +12,8 @@ export interface Crumb {
  * Migas de pan accesibles + JSON-LD BreadcrumbList. Refleja SIEMPRE el path real
  * de catálogo (Departamento › Categoría › Subcategoría › Producto).
  */
-export function Breadcrumbs({ items }: { items: Crumb[] }) {
-  const all: Crumb[] = [{ name: 'Inicio', href: '/' }, ...items];
+export function MigasDePan({ items }: { items: Miga[] }) {
+  const all: Miga[] = [{ name: 'Inicio', href: '/' }, ...items];
 
   const jsonLd = {
     '@context': 'https://schema.org',

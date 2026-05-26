@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Category } from '@/lib/data/types';
-import { ImageFallback } from '@/components/ui/BrandMark';
+import { ImagenRespaldo } from '@/components/ui/MarcaNG';
 
 interface CategoryCardProps {
   category: Pick<Category, 'name' | 'slug' | 'imageUrl' | 'parentSlug'>;
@@ -17,11 +17,11 @@ interface CategoryCardProps {
 }
 
 /**
- * CategoryCard — Server Component. Foto representativa con leve overlay azul al hover
+ * TarjetaCategoria — Server Component. Foto representativa con leve overlay azul al hover
  * y nombre en blanco encima (scrim para garantizar contraste). Fallback de marca si
  * no hay imagen. Ver diseno-ui.md §5.4.
  */
-export function CategoryCard({
+export function TarjetaCategoria({
   category,
   href,
   priority = false,
@@ -44,7 +44,7 @@ export function CategoryCard({
           {category.imageUrl ? (
             <Image src={category.imageUrl} alt="" fill sizes="48px" className="object-contain p-1" />
           ) : (
-            <ImageFallback />
+            <ImagenRespaldo />
           )}
         </span>
         <span className="flex-1 text-sm font-medium text-ink-800">{category.name}</span>
@@ -72,7 +72,7 @@ export function CategoryCard({
             className="object-cover transition-transform duration-300 ease-out group-hover:scale-105 motion-reduce:group-hover:scale-100"
           />
         ) : (
-          <ImageFallback />
+          <ImagenRespaldo />
         )}
         {/* Scrim azul de doble capa → contraste AA del texto blanco incluso sobre
             fotos claras o de fondo blanco. Se intensifica suavemente al hover. */}

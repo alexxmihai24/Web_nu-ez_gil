@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { X, ZoomIn } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ImageFallback } from '@/components/ui/BrandMark';
+import { ImagenRespaldo } from '@/components/ui/MarcaNG';
 
 interface ProductGalleryProps {
   images: string[];
@@ -16,7 +16,7 @@ interface ProductGalleryProps {
  * fondo neutro + miniaturas. Click en la principal abre lightbox (Esc/overlay cierra,
  * foco gestionado). Si no hay imágenes → fallback de marca. Ver diseno-ui.md §5.3.
  */
-export function ProductGallery({ images, alt }: ProductGalleryProps) {
+export function GaleriaProducto({ images, alt }: ProductGalleryProps) {
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const hasImages = images.length > 0;
@@ -58,7 +58,7 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
             </button>
           </>
         ) : (
-          <ImageFallback />
+          <ImagenRespaldo />
         )}
       </div>
 

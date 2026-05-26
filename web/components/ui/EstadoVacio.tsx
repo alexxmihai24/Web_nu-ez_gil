@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { PackageSearch } from 'lucide-react';
-import { Button } from './Button';
+import { Boton } from './Boton';
 
 interface EmptyStateProps {
   title: string;
@@ -11,7 +11,7 @@ interface EmptyStateProps {
 }
 
 /** Estado vacío con icono lineal + mensaje + CTA. Nunca una página en blanco. */
-export function EmptyState({ title, description, action, children }: EmptyStateProps) {
+export function EstadoVacio({ title, description, action, children }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-ink-200 bg-white px-6 py-16 text-center">
       <PackageSearch className="h-10 w-10 text-ink-300" aria-hidden="true" />
@@ -19,9 +19,9 @@ export function EmptyState({ title, description, action, children }: EmptyStateP
       {description ? <p className="mt-1 max-w-md text-sm text-ink-500">{description}</p> : null}
       {children}
       {action ? (
-        <Button href={action.href} variant="primary" className="mt-6">
+        <Boton href={action.href} variant="primary" className="mt-6">
           {action.label}
-        </Button>
+        </Boton>
       ) : null}
     </div>
   );

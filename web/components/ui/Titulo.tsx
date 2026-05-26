@@ -37,7 +37,7 @@ const levelDefaultSize: Record<Level, keyof typeof sizeStyles> = {
  * (h1–h6) y, por defecto, el tamaño visual; `size` permite desacoplarlos sin
  * romper la accesibilidad. Títulos en `brand-900`.
  */
-export function Heading({ level, children, eyebrow, className, size, id }: HeadingProps) {
+export function Titulo({ level, children, eyebrow, className, size, id }: HeadingProps) {
   const resolvedSize = size ?? levelDefaultSize[level];
 
   return (

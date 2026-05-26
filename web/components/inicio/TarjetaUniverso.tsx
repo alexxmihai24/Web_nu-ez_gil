@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ImageFallback } from '@/components/ui/BrandMark';
+import { ImagenRespaldo } from '@/components/ui/MarcaNG';
 
 interface PropsTarjetaUniverso {
   nombre: string;
@@ -48,7 +48,7 @@ export function TarjetaUniverso({
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06] motion-reduce:group-hover:scale-100"
           />
         ) : (
-          <ImageFallback />
+          <ImagenRespaldo />
         )}
         {/* Velo azul para contraste AA del texto sobre la foto (incl. fotos claras) */}
         <span

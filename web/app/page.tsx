@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { ArrowRight, ShieldCheck, Headset, Repeat } from 'lucide-react';
 import { getFeatured, getDepartments } from '@/lib/data';
 import type { Badge, Category, ProductListItem } from '@/lib/data/types';
-import { Container } from '@/components/ui/Container';
-import { Button } from '@/components/ui/Button';
-import { ProductCarousel } from '@/components/home/ProductCarousel';
+import { Contenedor } from '@/components/ui/Contenedor';
+import { Boton } from '@/components/ui/Boton';
+import { Carrusel } from '@/components/home/Carrusel';
 import { Portada } from '@/components/inicio/Portada';
 import { FranjaConfianza } from '@/components/inicio/FranjaConfianza';
 import { BloqueSeccion } from '@/components/inicio/BloqueSeccion';
 import { TarjetaUniverso } from '@/components/inicio/TarjetaUniverso';
-import { UNIVERSES } from '@/components/layout/universes';
+import { UNIVERSOS } from '@/components/layout/universos';
 
 export const revalidate = 3600; // ISR 1 h
 
@@ -45,7 +45,7 @@ export default async function PaginaInicio() {
   // Mosaico de la portada: productos reales con foto.
   const vitrina = [...novedades, ...ofertas, ...outlet].filter((p) => p.imageUrl).slice(0, 3);
 
-  const universos = UNIVERSES.map((u) => {
+  const universos = UNIVERSOS.map((u) => {
     const principal = u.departments[0];
     return {
       id: u.id,
@@ -81,25 +81,25 @@ export default async function PaginaInicio() {
 
       {novedades.length > 0 ? (
         <BloqueSeccion titulo="Novedades" antetitulo="Recién llegados" tono="tenue" verTodo={{ href: '/novedades' }}>
-          <ProductCarousel products={novedades} />
+          <Carrusel products={novedades} />
         </BloqueSeccion>
       ) : null}
 
       {ofertas.length > 0 ? (
         <BloqueSeccion titulo="Ofertas" antetitulo="Precio rebajado" verTodo={{ href: '/ofertas' }}>
-          <ProductCarousel products={ofertas} />
+          <Carrusel products={ofertas} />
         </BloqueSeccion>
       ) : null}
 
       {outlet.length > 0 ? (
         <BloqueSeccion titulo="Outlet" antetitulo="Últimas unidades" tono="tenue" verTodo={{ href: '/outlet' }}>
-          <ProductCarousel products={outlet} />
+          <Carrusel products={outlet} />
         </BloqueSeccion>
       ) : null}
 
       {/* Bloque de confianza "quiénes somos" */}
       <section className="atmosfera-tinta grano relative overflow-hidden text-white">
-        <Container className="relative grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
+        <Contenedor className="relative grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
           <div>
             <p className="text-2xs font-bold uppercase tracking-[0.16em] text-accent-300">Desde 1994</p>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-white lg:text-4xl">
@@ -121,10 +121,10 @@ export default async function PaginaInicio() {
                 </li>
               ))}
             </ul>
-            <Button href="/quienes-somos" variant="primary" className="mt-8">
+            <Boton href="/quienes-somos" variant="primary" className="mt-8">
               Conócenos
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </Button>
+            </Boton>
           </div>
           <div className="hidden lg:block" aria-hidden="true">
             <div className="grid grid-cols-3 overflow-hidden rounded-xl ring-1 ring-white/10">
@@ -142,7 +142,7 @@ export default async function PaginaInicio() {
               ))}
             </div>
           </div>
-        </Container>
+        </Contenedor>
       </section>
 
       {/* Actualidad (placeholder hasta que entre el blog real) */}

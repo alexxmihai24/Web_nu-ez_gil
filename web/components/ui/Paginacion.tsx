@@ -24,7 +24,7 @@ function pageRange(current: number, last: number): (number | 'gap')[] {
 }
 
 /** Paginación Server con <Link> a ?page= (filtros preservados por buildHref). */
-export function Pagination({ page, total, pageSize, buildHref }: PaginationProps) {
+export function Paginacion({ page, total, pageSize, buildHref }: PaginationProps) {
   const lastPage = Math.max(1, Math.ceil(total / pageSize));
   if (lastPage <= 1) return null;
 

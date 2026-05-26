@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import type { ProductListItem } from '@/lib/data/types';
-import { ProductImage } from '@/components/ui/ProductImage';
-import { Badge, AvailabilityBadge } from '@/components/ui/Badge';
-import { Price } from '@/components/ui/Price';
-import { AddToRequestButton } from './AddToRequestButton';
+import { ImagenProducto } from '@/components/ui/ImagenProducto';
+import { Badge, InsigniaDisponibilidad } from '@/components/ui/Badge';
+import { Precio } from '@/components/ui/Precio';
+import { BotonAnadirSolicitud } from './BotonAnadirSolicitud';
 
 interface ProductCardProps {
   product: ProductListItem;
@@ -18,13 +18,13 @@ interface ProductCardProps {
 const DEFAULT_SIZES = '(max-width:640px) 50vw, (max-width:1024px) 33vw, 240px';
 
 /**
- * ProductCard B2B — Server Component (la única isla Client es el CTA).
+ * TarjetaProducto B2B — Server Component (la única isla Client es el CTA).
  * Anatomía: foto cuadrada object-contain + fallback de marca · badges · marca ·
  * nombre (line-clamp-2, altura fija → grid alineado) · referencia mono-tabular ·
  * disponibilidad · precio + "I.V.A. no incluido" · CTA teal a ancho completo.
  * Resuelve el bug P6 (cards vacías). Ver diseno-ui.md §4.3.
  */
-export function ProductCard({ product, priority = false, sizes = DEFAULT_SIZES, className }: ProductCardProps) {
+export function TarjetaProducto({ product, priority = false, sizes = DEFAULT_SIZES, className }: ProductCardProps) {
   const href = `/producto/${product.slug}`;
   const altImg = product.brandName ? `${product.name} — ${product.brandName}` : product.name;
   const visibleBadges = product.badges.slice(0, 2);
@@ -46,7 +46,7 @@ export function ProductCard({ product, priority = false, sizes = DEFAULT_SIZES, 
           </div>
         ) : null}
         <Link href={href} tabIndex={-1} aria-hidden="true">
-          <ProductImage
+          <ImagenProducto
             src={product.imageUrl}
             alt={altImg}
             sizes={sizes}
@@ -80,14 +80,14 @@ export function ProductCard({ product, priority = false, sizes = DEFAULT_SIZES, 
         <p className="tabular mt-1 text-xs text-ink-400">Ref. {product.reference}</p>
 
         <div className="mt-2">
-          <AvailabilityBadge availability={product.availability} />
+          <InsigniaDisponibilidad availability={product.availability} />
         </div>
 
         <div className="mt-3 flex flex-1 flex-col justify-end">
-          <Price cents={product.priceCents} oldCents={product.oldPriceCents} size="md" className="mb-3" />
+          <Precio cents={product.priceCents} oldCents={product.oldPriceCents} size="md" className="mb-3" />
           {/* z-10 para quedar por encima del overlay del enlace de la card */}
           <div className="relative z-10">
-            <AddToRequestButton
+            <BotonAnadirSolicitud
               productId={product.id}
               productSlug={product.slug}
               name={product.name}

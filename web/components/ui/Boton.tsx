@@ -50,7 +50,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
  * un <button>. Variantes y estados según agentes/diseno-ui.md §4.1 / §6.
  * `h-13` (52px) se aporta vía clase arbitraria de Tailwind.
  */
-export function Button(props: ButtonProps) {
+export function Boton(props: ButtonProps) {
   const { variant = 'primary', size = 'md', fullWidth, className, children } = props;
   const classes = cn(
     base,

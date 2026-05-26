@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getCategoryBySlug, getProductsByCategory } from '@/lib/data';
-import { CatalogShell } from '@/components/catalog/CatalogShell';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
-import { CategoryCard } from '@/components/catalog/CategoryCard';
-import { Toolbar } from '@/components/catalog/Toolbar';
-import { Pagination } from '@/components/ui/Pagination';
-import { EmptyState } from '@/components/ui/EmptyState';
-import { Heading } from '@/components/ui/Heading';
+import { MarcoCatalogo } from '@/components/catalog/MarcoCatalogo';
+import { RejillaProductos } from '@/components/catalog/RejillaProductos';
+import { TarjetaCategoria } from '@/components/catalog/TarjetaCategoria';
+import { BarraHerramientas } from '@/components/catalog/BarraHerramientas';
+import { Paginacion } from '@/components/ui/Paginacion';
+import { EstadoVacio } from '@/components/ui/EstadoVacio';
+import { Titulo } from '@/components/ui/Titulo';
 import type { ProductQuery } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -72,17 +72,17 @@ export default async function SubcategoryPage({ params, searchParams }: PageProp
   };
 
   return (
-    <CatalogShell title={category.name} activeDepartment={departamento} breadcrumbs={breadcrumbs}>
+    <MarcoCatalogo title={category.name} activeDepartment={departamento} breadcrumbs={breadcrumbs}>
       {/* Si la subcategoría tuviera más niveles, mostramos sus hijos arriba. */}
       {children.length > 0 ? (
         <>
-          <Heading level={2} size="lg">
+          <Titulo level={2} size="lg">
             Subcategorías
-          </Heading>
+          </Titulo>
           <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {children.map((child) => (
               <li key={child.id}>
-                <CategoryCard
+                <TarjetaCategoria
                   category={child}
                   href={`/${category.slug}/${child.slug}`}
                   variant="compact"
@@ -96,20 +96,20 @@ export default async function SubcategoryPage({ params, searchParams }: PageProp
 
       {products.length > 0 ? (
         <>
-          <Toolbar total={total} />
-          <Heading level={2} size="xl" className="sr-only">
+          <BarraHerramientas total={total} />
+          <Titulo level={2} size="xl" className="sr-only">
             Productos
-          </Heading>
-          <ProductGrid products={products} priorityCount={5} className="mt-6" />
-          <Pagination page={page} total={total} pageSize={PAGE_SIZE} buildHref={buildHref} />
+          </Titulo>
+          <RejillaProductos products={products} priorityCount={5} className="mt-6" />
+          <Paginacion page={page} total={total} pageSize={PAGE_SIZE} buildHref={buildHref} />
         </>
       ) : (
-        <EmptyState
+        <EstadoVacio
           title="No hay productos que mostrar"
           description="Prueba a quitar filtros o consúltanos la disponibilidad de lo que buscas."
           action={{ label: 'Consultar disponibilidad', href: '/contacto' }}
         />
       )}
-    </CatalogShell>
+    </MarcoCatalogo>
   );
 }

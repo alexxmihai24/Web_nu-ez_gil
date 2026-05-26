@@ -1,6 +1,6 @@
 import type { ProductListItem } from '@/lib/data/types';
 import { cn } from '@/lib/utils';
-import { ProductCard } from './ProductCard';
+import { TarjetaProducto } from './TarjetaProducto';
 
 interface ProductGridProps {
   products: ProductListItem[];
@@ -10,7 +10,7 @@ interface ProductGridProps {
 }
 
 /** Grid responsive de productos: 2 col móvil · 3 tablet · 4 desktop · 5 en xl. */
-export function ProductGrid({ products, priorityCount = 0, className }: ProductGridProps) {
+export function RejillaProductos({ products, priorityCount = 0, className }: ProductGridProps) {
   return (
     <ul
       className={cn(
@@ -20,7 +20,7 @@ export function ProductGrid({ products, priorityCount = 0, className }: ProductG
     >
       {products.map((p, i) => (
         <li key={p.id}>
-          <ProductCard product={p} priority={i < priorityCount} className="h-full" />
+          <TarjetaProducto product={p} priority={i < priorityCount} className="h-full" />
         </li>
       ))}
     </ul>

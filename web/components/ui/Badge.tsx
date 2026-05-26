@@ -31,7 +31,7 @@ const availabilityMap: Record<Availability, { label: string; dot: string; text: 
 };
 
 /** Indicador de disponibilidad: punto de color + texto (no es un badge sólido). */
-export function AvailabilityBadge({
+export function InsigniaDisponibilidad({
   availability,
   className,
 }: {

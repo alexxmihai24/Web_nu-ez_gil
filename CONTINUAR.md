@@ -2,42 +2,46 @@
 
 > Cuando Alex diga "continuar": seguir desde aquí, **sin preguntar y sin re-auditar** todo.
 
-## Estado actual (actualizado 2026-05-26 tarde)
-App Next.js en `web/` (Next 15 App Router + TS + Tailwind 3.4 con tokens de marca + Archivo).
-**Fase 1 y Fase 2 COMPLETAS y verificadas.** Construimos DESDE CERO (sin migración Movatec). Decisiones cliente: **precios públicos** ("I.V.A. no incluido"), **solo solicitud de pedido/presupuesto** (sin pago online, sin PCI), login opcional.
+## Estado actual (actualizado 2026-05-27)
+App Next.js 15 (App Router + TS + Tailwind 3.4) en `web/`. E-commerce B2B (limpieza/hostelería).
+Decisiones cliente: **precios públicos** ("I.V.A. no incluido"), **solo solicitud de pedido/presupuesto** (sin pago online), login opcional. **Rework en curso**: diseño **industrial premium**, **Supabase nativo** (`supabase-js` + RLS, Prisma retirado), **código TODO en español**, responsive sin bugs. Ver `03-PLAN-REWORK.md`.
 
-> **OJO:** las sesiones anteriores SÍ ejecutaron Backend y Frontend (sus ficheros ya existen). El handoff antiguo decía "rechazados"; era incorrecto.
+## 🔴 DECISIÓN PENDIENTE — PRIMERO AL RETOMAR
+**El cliente quiere la web DINÁMICA, no estática.** Ahora las páginas de catálogo usan **ISR** (`revalidate = 3600`) + `generateStaticParams` → se prerenderizan y los cambios en Supabase tardan ~1h en verse. Hay que pasarlas a **render dinámico** (SSR en cada visita, datos siempre frescos):
+- Añadir `export const dynamic = 'force-dynamic'` (o `export const revalidate = 0`) en las páginas de catálogo: `app/page.tsx`, `app/[departamento]/page.tsx`, `app/[departamento]/[subcategoria]/page.tsx`, `app/producto/[slug]/page.tsx`, `app/marcas/page.tsx`, `app/marcas/[marca]/page.tsx`, `app/novedades|ofertas|outlet/page.tsx`. (`buscador` y `api/search` ya son dinámicas.)
+- Quitar `revalidate = 3600` de esas páginas. `generateStaticParams` puede quedarse (se ignora con force-dynamic) o quitarse.
+- Las legales/quiénes-somos/contacto pueden seguir estáticas (contenido fijo). **Falta confirmar alcance con el cliente**: ¿solo catálogo dinámico (recomendado) o TODO dinámico? Se preguntó y NO llegó a responder.
 
-### Hecho ✅
-- **Fase 1 base:** config, tokens, layout, middleware (CSP nonce vía `x-nonce`), `lib/env.ts`, `lib/data/types.ts` (CONTRATO).
-- **SEO:** `lib/seo/**`, `sitemap.ts` (ahora incluye categorías + 52 marcas), `robots.ts`, páginas institucionales y **todas las legales** (privacidad, aviso-legal, condiciones-envio, **cookies**, **como-comprar**).
-- **Security:** `middleware.ts`, `lib/security/{headers,csrf,rate-limit}.ts`, `lib/auth/{password,session}.ts`, `SECURITY.md`.
-- **Backend (Fase 2):** `prisma/schema.prisma`, `lib/db.ts`, dataset estático real (`lib/data/seeddata.ts`: 13 deptos, 52 marcas, ~35 productos del crawl), `static-store.ts`, `query-utils.ts`, `dbavailable.ts`. **`lib/data/index.ts` ya implementa el contrato** (camino estático + dispatch diferido a `productdb.ts` cuando hay `DATABASE_URL`). `app/api/search/route.ts` (autosuggest con rate-limit). `productdb.ts` con las 7 funciones Prisma (type-checked; sin probar en runtime, falta DB+seed).
-- **Frontend (Fase 2):** Header/Footer/MegaMenu reales, todos los `components/**`, HOME definitiva, rutas `[departamento]`, `[departamento]/[subcategoria]`, `producto/[slug]`, `marcas`, `marcas/[marca]`, `buscador`.
-- **Build:** `npm run build` OK → **82 páginas** (13 deptos + 52 marcas SSG). Smoke-test prod OK: home con carruseles, departamento hoja con productos, categorías, `/api/search`, página de marca. (Recordar `npx prisma generate` tras clonar.)
+## 🔧 GIT (IMPORTANTE)
+- `Trabajo_nuñez_gil/` tiene **repo git DEDICADO** → `origin = https://github.com/alexxmihai24/Web_nu-ez_gil.git` (rama `main`, pusheado).
+- ⚠️ `C:/Users/Alex` ENTERA es OTRO repo (`metalica_arroyo.git`). NO ejecutar git para este proyecto desde fuera de `Trabajo_nuñez_gil`.
+- `investigacion/data/crawl-report.json` en `.gitignore` (token Mapbox `sk.` → GitHub lo bloquea). Cliente debería rotar ese token si sigue activo.
 
-### Pendiente ⏳
-1. **GA4 con nonce:** `app/layout.tsx` aún NO carga el script de GA4. Añadir `<Script>` GA4 leyendo `headers().get('x-nonce')` (`NEXT_PUBLIC_GA_ID` ya en `lib/env.ts`; ver SECURITY.md §2).
-2. **Migración a Postgres (futuro):** `prisma/seed.ts` no existe; el camino DB de `productdb.ts` está implementado pero sin verificar (sin `DATABASE_URL`). Hoy el catálogo corre con el dataset estático.
-3. **Fase 3:** solicitud de pedido + Área Clientes (Backend + Frontend + Security).
-4. **Fase 4/5:** contenido/SEO local/lanzamiento y QA.
+## 🟢 SUPABASE (Fase A — HECHA)
+- Proyecto del cliente: `https://tropuorwkphtanlrrrnu.supabase.co`. Claves en `web/.env.local` (`NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`). **Gitignored, NO al repo.**
+- ⚠️ El **MCP de Supabase de la sesión apunta a una cuenta ANTIGUA** → NO usarlo. Trabajar con las claves del `.env.local` y el SQL Editor del dashboard.
+- **El cliente YA ejecutó** `web/supabase/01-esquema.sql` (tablas español + RLS lectura pública) y `web/supabase/02-seed.sql`. Verificado por lectura: **50 categorías · 52 marcas · 34 productos · 34 variantes · 24 imágenes**. La web ya sirve el catálogo desde Supabase (con fallback al dataset estático si fallara).
+- Imágenes: aún apuntan al CDN ajeno `workcrm.com`. **Pendiente**: migrarlas a **Supabase Storage** (quitar dependencia).
 
-## 🔧 GIT (IMPORTANTE — leer antes de tocar git)
-- El proyecto vive en `Trabajo_nuñez_gil/` que tiene **su PROPIO repo git dedicado** con remote `origin = https://github.com/alexxmihai24/Web_nu-ez_gil.git` (rama `main`, pusheado).
-- ⚠️ La carpeta de usuario `C:/Users/Alex` ENTERA es OTRO repo git (`origin = metalica_arroyo.git`). NO ejecutar git desde fuera de `Trabajo_nuñez_gil` para este proyecto, ni `add`/`push` en el repo padre.
-- `investigacion/data/crawl-report.json` está en `.gitignore` (contiene el token Mapbox `sk.` filtrado → GitHub lo bloquea). El cliente debería **rotar/revocar ese token** en Mapbox si sigue activo.
+## Hecho en la sesión 2026-05-27
+- **HOME premium** en español (`components/inicio/`: Portada con vitrina, FranjaConfianza, TarjetaUniverso con foto real, BloqueSeccion). Carruseles, bloque confianza.
+- **Cimientos diseño**: tokens `z-index` reales (arreglan el solapamiento del menú/buscador que se montaba sobre las tarjetas — causa raíz era `z-megamenu`/`z-modal` inexistentes), Inter (cuerpo) + Archivo (titulares), atmósfera "tinta" + grano.
+- **Bugs corregidos**: universos grises → foto real; SVGs institucionales del footer creados; enlaces rotos (`/novedades`-`/ofertas`-`/outlet` creadas; slugs legales del footer corregidos).
+- **Migración a Supabase**: `lib/supabase/cliente.ts`, `lib/data/supabasedata.ts` (consultas en español), `lib/data/index.ts` (despacha Supabase→fallback estático). **Prisma retirado** (borrados `lib/db.ts`, `productdb.ts`, `dbavailable.ts`, `prisma/`, deps). `scripts/gen-seed-sql.ts` genera el seed.
+- **Consolidación español**: `scripts/codemod-espanol.mjs` renombró ~27 componentes + imports a español (Cabecera, PiePagina, MenuMega, NavegacionMovil, BuscadorSugerencias, TarjetaProducto, RejillaProductos, TarjetaCategoria, MarcoCatalogo, BarraDepartamentos, BarraHerramientas, GaleriaProducto, CajaCompra, BotonAnadirSolicitud, SelectorCantidad, Boton, Contenedor, Titulo, Precio, MigasDePan, EstadoVacio, Paginacion, Esqueleto, ImagenProducto, MarcaNG, Carrusel, universos/UNIVERSOS…). **Excepción**: el componente UI `Badge` se mantiene en inglés (choca con el TIPO de datos `Badge` del contrato). Huérfanos borrados (`home/{Hero,Section,ValueProps}.tsx`).
+- **Verificado**: `npm run build` verde. QA visual previa (home + páginas internas) a 390/768/1280: 0 solapamientos, 0 imágenes rotas. Conexión Supabase validada.
 
-## ⚡ REWORK EN CURSO (2026-05-26 tarde) — ver `03-PLAN-REWORK.md`
-**HOME premium hecha y verificada** (QA visual Edge a 390/768/1280px: 0 solapamientos, 0 imágenes rotas; build verde; commit pusheado). Hecho: cimientos (z-index real que arregla el solapamiento, Inter+Archivo, atmósfera), HOME en español (`components/inicio/*`: Portada, FranjaConfianza, TarjetaUniverso, BloqueSeccion), universos con foto real, páginas `/novedades`-`/ofertas`-`/outlet`, SVGs institucionales, enlaces legales del footer corregidos.
-Pendiente: **consolidar español** en el resto de componentes (header/footer/catalog/ui aún en inglés; borrar huérfanos `components/home/{Hero,Section,ValueProps}.tsx`), **Fase C** (catálogo/ficha/marcas/buscador a premium), **Fase A Supabase** (esperando claves del cliente), GA4.
-El cliente pidió rework: **diseño industrial premium**, **Supabase nativo (`supabase-js`+RLS, se retira Prisma)**, **código TODO en español** (identificadores incluidos), responsive sin bugs.
-- **Fase A (Supabase):** EN ESPERA de que el cliente pase las claves. Preparar SQL tablas+RLS+Storage+seed + capa `lib/datos` en español.
-- **Fase B (Diseño/UI):** EN MARCHA sobre el dataset estático actual (sin BD). Agente Frontend rehaciendo sistema de diseño + HOME premium en español, mobile-first, con QA visual a 390/768/1280px. Validar estilo con el cliente antes de seguir.
-- **Fase C/D:** catálogo/ficha/marcas/buscador + accesibilidad/rendimiento.
-Usar agentes de `AGECNCIA_IA/agency-agents` (UX Architect, UI Designer, Frontend Developer, Backend Architect). NO el "Senior Developer" (Laravel).
+## Pendiente ⏳ (orden sugerido)
+1. **Render dinámico** (ver sección 🔴 arriba) — confirmar alcance e implementar.
+2. **QA visual final** con datos de Supabase (home/categoría/ficha/marcas/buscador a 390/768/1280) — había un `web/.qa/qa.mjs` listo (gitignored). Confirmar 0 bugs + que se ve el catálogo de Supabase.
+3. **Migrar imágenes a Supabase Storage** (quitar workcrm.com).
+4. **GA4 con nonce** en `layout.tsx` (`NEXT_PUBLIC_GA_ID` en `lib/env.ts`; nonce en `x-nonce`, ver SECURITY.md §2).
+5. **Fase 3**: solicitud de pedido (carrito "Solicitud" → email a `info@nunezgil.com`) + Área Clientes (login opcional). Tablas usuarios/pedidos NO creadas aún en Supabase.
+6. Accesibilidad AA + rendimiento.
 
-## Cómo retomar (orden anterior, ya superado por el rework)
-NO relanzar Backend/Frontend con el enfoque viejo. El catálogo Prisma+estático funcionaba, pero se sustituye por Supabase + diseño premium.
+## Notas de proceso
+- Los **subagentes en background NO pueden escribir** (no pueden pedir permisos) → ejecutar implementación en el hilo principal o agentes en foreground.
+- ⚠️ Alex expresó **descontento con cómo se trabajó la sesión del 26-27 may** (pendiente de concretar qué mejorar). Probables fricciones: demasiadas preguntas, demasiados tokens/tiempo, varias correcciones de rumbo (MCP Supabase antiguo, estáticas vs dinámicas). Al retomar, preguntar 1 vez qué cambiar y ajustar.
 
-## Pendiente del cliente (NO bloquear; usar defaults y seguir)
-Horario para Google Business, handles RRSS, geo lat/lng de Montilla. Token Mapbox `sk.` del sitio viejo: el cliente no tiene acceso a Movatec → se ignora (web nueva no lo usa).
+## Pendiente del cliente (no bloquear)
+Horario Google Business, handles RRSS, geo lat/lng de Montilla, logos oficiales FEDER/Junta (hoy hay placeholders dignos en `public/logos-institucionales/`).

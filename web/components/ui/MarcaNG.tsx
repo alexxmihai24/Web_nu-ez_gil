@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
  *  - wordmark del header/footer.
  * Sin dependencia de red → siempre renderiza.
  */
-export function BrandMark({
+export function MarcaNG({
   className,
   title = 'Núñez Gil',
 }: {
@@ -43,7 +43,7 @@ export function BrandMark({
  * Placeholder de imagen faltante (producto/categoría) — fondo neutro + marca NG en gris.
  * Ocupa todo el contenedor (que ya reserva el aspect-ratio → CLS 0).
  */
-export function ImageFallback({ className }: { className?: string }) {
+export function ImagenRespaldo({ className }: { className?: string }) {
   return (
     <div
       className={cn(
@@ -52,7 +52,7 @@ export function ImageFallback({ className }: { className?: string }) {
       )}
       aria-hidden="true"
     >
-      <BrandMark className="h-1/3 w-1/3 max-h-20 max-w-20" />
+      <MarcaNG className="h-1/3 w-1/3 max-h-20 max-w-20" />
     </div>
   );
 }

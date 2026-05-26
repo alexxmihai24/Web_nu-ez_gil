@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { ImageFallback } from './BrandMark';
+import { ImagenRespaldo } from './MarcaNG';
 
 interface ProductImageProps {
   src?: string | null;
@@ -17,7 +17,7 @@ interface ProductImageProps {
  * neutro. Si no hay `src` → fallback de marca NG (NUNCA un 1×1 roto — corrige P6).
  * El contenedor reserva el aspect-ratio → CLS 0.
  */
-export function ProductImage({
+export function ImagenProducto({
   src,
   alt,
   sizes,
@@ -37,7 +37,7 @@ export function ProductImage({
           className={cn('object-contain p-3 transition-transform duration-200 ease-out', imgClassName)}
         />
       ) : (
-        <ImageFallback />
+        <ImagenRespaldo />
       )}
     </div>
   );

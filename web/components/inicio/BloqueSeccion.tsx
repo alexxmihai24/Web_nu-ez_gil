@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { Container } from '@/components/ui/Container';
+import { Contenedor } from '@/components/ui/Contenedor';
 
 interface PropsBloqueSeccion {
   titulo: string;
@@ -21,7 +21,7 @@ interface PropsBloqueSeccion {
 export function BloqueSeccion({ titulo, antetitulo, verTodo, tono = 'claro', children }: PropsBloqueSeccion) {
   return (
     <section className={tono === 'tenue' ? 'bg-ink-50 py-14 lg:py-20' : 'py-14 lg:py-20'}>
-      <Container>
+      <Contenedor>
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
             {antetitulo ? (
@@ -42,7 +42,7 @@ export function BloqueSeccion({ titulo, antetitulo, verTodo, tono = 'claro', chi
           ) : null}
         </div>
         {children}
-      </Container>
+      </Contenedor>
     </section>
   );
 }

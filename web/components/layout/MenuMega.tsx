@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { UNIVERSES } from './universes';
+import { UNIVERSOS } from './universos';
 
 /**
  * Mega-menú "Catálogo" — Client island accesible (ver diseno-ui.md §4.4 + ux §2.2).
@@ -13,7 +13,7 @@ import { UNIVERSES } from './universes';
  * devuelve el foco al disparador. Respeta prefers-reduced-motion (sin animación CSS
  * propia; la transición la limita globals.css).
  */
-export function MegaMenu() {
+export function MenuMega() {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -91,7 +91,7 @@ export function MegaMenu() {
           className="absolute left-0 top-full z-megamenu mt-0 w-screen max-w-[min(1100px,calc(100vw-2rem))] origin-top rounded-b-lg border border-ink-200 bg-white shadow-lg"
         >
           <div className="grid grid-cols-2 gap-x-8 gap-y-6 p-6 md:grid-cols-3 lg:grid-cols-4">
-            {UNIVERSES.map((u) => {
+            {UNIVERSOS.map((u) => {
               const Icon = u.icon;
               return (
                 <div key={u.id}>

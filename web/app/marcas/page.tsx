@@ -3,11 +3,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getBrands } from '@/lib/data';
 import type { Brand } from '@/lib/data/types';
-import { Container } from '@/components/ui/Container';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Heading } from '@/components/ui/Heading';
-import { EmptyState } from '@/components/ui/EmptyState';
-import { BrandMark } from '@/components/ui/BrandMark';
+import { Contenedor } from '@/components/ui/Contenedor';
+import { MigasDePan } from '@/components/ui/MigasDePan';
+import { Titulo } from '@/components/ui/Titulo';
+import { EstadoVacio } from '@/components/ui/EstadoVacio';
+import { MarcaNG } from '@/components/ui/MarcaNG';
 
 export const revalidate = 3600;
 
@@ -32,11 +32,11 @@ export default async function BrandsPage() {
   const sortedKeys = Array.from(groups.keys()).sort((a, b) => a.localeCompare(b, 'es'));
 
   return (
-    <Container className="py-6 lg:py-8">
-      <Breadcrumbs items={[{ name: 'Marcas' }]} />
-      <Heading level={1} size="3xl" className="mt-4">
+    <Contenedor className="py-6 lg:py-8">
+      <MigasDePan items={[{ name: 'Marcas' }]} />
+      <Titulo level={1} size="3xl" className="mt-4">
         Marcas
-      </Heading>
+      </Titulo>
       <p className="mt-2 max-w-prose text-ink-600">
         Distribuimos las principales marcas del sector de la limpieza profesional, la hostelería y
         la industria. Explora por marca y solicita lo que necesites.
@@ -44,7 +44,7 @@ export default async function BrandsPage() {
 
       {brands.length === 0 ? (
         <div className="mt-8">
-          <EmptyState
+          <EstadoVacio
             title="Pronto añadiremos el listado de marcas"
             description="Estamos preparando el índice completo de marcas con las que trabajamos."
             action={{ label: 'Ver catálogo', href: '/quimica-industrial' }}
@@ -54,9 +54,9 @@ export default async function BrandsPage() {
         <div className="mt-8 space-y-10">
           {sortedKeys.map((key) => (
             <section key={key} aria-labelledby={`marca-${key}`}>
-              <Heading level={2} size="lg" id={`marca-${key}`} className="border-b border-ink-200 pb-2">
+              <Titulo level={2} size="lg" id={`marca-${key}`} className="border-b border-ink-200 pb-2">
                 {key}
-              </Heading>
+              </Titulo>
               <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                 {groups.get(key)!.map((brand) => (
                   <li key={brand.id}>
@@ -75,7 +75,7 @@ export default async function BrandsPage() {
                           />
                         </span>
                       ) : (
-                        <BrandMark className="h-8 w-8 text-ink-300" title={brand.name} />
+                        <MarcaNG className="h-8 w-8 text-ink-300" title={brand.name} />
                       )}
                       <span className="line-clamp-1 text-center text-xs font-medium text-ink-600 group-hover:text-brand-700">
                         {brand.name}
@@ -88,6 +88,6 @@ export default async function BrandsPage() {
           ))}
         </div>
       )}
-    </Container>
+    </Contenedor>
   );
 }

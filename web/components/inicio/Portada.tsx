@@ -1,10 +1,10 @@
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import type { ProductListItem } from '@/lib/data/types';
-import { Container } from '@/components/ui/Container';
-import { Button } from '@/components/ui/Button';
-import { ProductImage } from '@/components/ui/ProductImage';
-import { Price } from '@/components/ui/Price';
-import { SearchAutosuggest } from '@/components/layout/SearchAutosuggest';
+import { Contenedor } from '@/components/ui/Contenedor';
+import { Boton } from '@/components/ui/Boton';
+import { ImagenProducto } from '@/components/ui/ImagenProducto';
+import { Precio } from '@/components/ui/Precio';
+import { BuscadorSugerencias } from '@/components/layout/BuscadorSugerencias';
 
 interface PropsPortada {
   /** Productos reales para el mosaico de la derecha (se usan hasta 3 con foto). */
@@ -22,7 +22,7 @@ export function Portada({ productosVitrina }: PropsPortada) {
 
   return (
     <section className="atmosfera-tinta grano relative overflow-hidden text-white">
-      <Container className="relative grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:py-24">
+      <Contenedor className="relative grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:py-24">
         {/* Columna de mensaje */}
         <div className="animate-aparecer-arriba">
           <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-2xs font-semibold uppercase tracking-[0.16em] text-accent-200 ring-1 ring-white/15">
@@ -42,25 +42,25 @@ export function Portada({ productosVitrina }: PropsPortada) {
 
           {/* Buscador protagonista */}
           <div className="mt-8 max-w-xl">
-            <SearchAutosuggest variant="hero" />
+            <BuscadorSugerencias variant="hero" />
             <p className="mt-2 pl-1 text-xs text-brand-200">
               Busca por producto o referencia entre todo el catálogo.
             </p>
           </div>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <Button href="/quimica-industrial" variant="primary" size="lg">
+            <Boton href="/quimica-industrial" variant="primary" size="lg">
               Ver catálogo
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </Button>
-            <Button
+            </Boton>
+            <Boton
               href="/contacto"
               size="lg"
               variant="ghost"
               className="border border-white/30 text-white hover:bg-white/10"
             >
               Solicitar presupuesto
-            </Button>
+            </Boton>
           </div>
         </div>
 
@@ -84,7 +84,7 @@ export function Portada({ productosVitrina }: PropsPortada) {
             </div>
           </div>
         ) : null}
-      </Container>
+      </Contenedor>
     </section>
   );
 }
@@ -93,7 +93,7 @@ export function Portada({ productosVitrina }: PropsPortada) {
 function FichaVitrina({ producto, destacada = false }: { producto: ProductListItem; destacada?: boolean }) {
   return (
     <div className="overflow-hidden rounded-lg bg-white text-ink-800 shadow-lg ring-1 ring-black/5">
-      <ProductImage
+      <ImagenProducto
         src={producto.imageUrl}
         alt=""
         sizes="240px"
@@ -107,7 +107,7 @@ function FichaVitrina({ producto, destacada = false }: { producto: ProductListIt
         ) : null}
         <p className="mt-0.5 line-clamp-1 text-sm font-semibold text-ink-900">{producto.name}</p>
         <div className="mt-1.5">
-          <Price cents={producto.priceCents} size="md" />
+          <Precio cents={producto.priceCents} size="md" />
         </div>
       </div>
     </div>

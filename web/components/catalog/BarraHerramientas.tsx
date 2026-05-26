@@ -14,11 +14,11 @@ const SORT_OPTIONS: ReadonlyArray<{ value: SortValue; label: string }> = [
 ];
 
 /**
- * Toolbar de listado (orden + recuento) — Client island.
+ * BarraHerramientas de listado (orden + recuento) — Client island.
  * Cambiar el orden reescribe el searchParam `sort`, resetea `page` y conserva el
  * resto de filtros; el Server Component vuelve a renderizar el grid ordenado.
  */
-export function Toolbar({ total }: { total: number }) {
+export function BarraHerramientas({ total }: { total: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

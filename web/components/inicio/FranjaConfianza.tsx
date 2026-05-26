@@ -1,5 +1,5 @@
 import { CalendarClock, PackageCheck, Truck, Headset } from 'lucide-react';
-import { Container } from '@/components/ui/Container';
+import { Contenedor } from '@/components/ui/Contenedor';
 
 /**
  * Franja de confianza bajo la portada — 4 argumentos de venta B2B con icono.
@@ -15,7 +15,7 @@ const ARGUMENTOS = [
 export function FranjaConfianza() {
   return (
     <div className="relative z-10 -mt-8 lg:-mt-10">
-      <Container>
+      <Contenedor>
         <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-ink-200 shadow-md ring-1 ring-ink-200 lg:grid-cols-4">
           {ARGUMENTOS.map(({ icono: Icono, titulo, detalle }) => (
             <li key={titulo} className="flex items-start gap-3 bg-white p-5">
@@ -29,7 +29,7 @@ export function FranjaConfianza() {
             </li>
           ))}
         </ul>
-      </Container>
+      </Contenedor>
     </div>
   );
 }

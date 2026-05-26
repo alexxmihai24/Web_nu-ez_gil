@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronRight, Phone, Mail, User, Tag, Sparkles, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { UNIVERSES } from './universes';
+import { UNIVERSOS } from './universos';
 
 /**
  * Navegación móvil (drill-down off-canvas) — Client island accesible (ux §2.3).
  * Hamburguesa → drawer con foco atrapado, cierre por Esc/overlay/✕. Nivel 0 = 6
  * universos; tap despliega sus departamentos (acordeón). Buscador fijo arriba.
  */
-export function MobileNav() {
+export function NavegacionMovil() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -99,7 +99,7 @@ export function MobileNav() {
 
             <nav aria-label="Departamentos" className="flex-1 overflow-y-auto p-2">
               <ul>
-                {UNIVERSES.map((u) => {
+                {UNIVERSOS.map((u) => {
                   const isOpen = expanded === u.id;
                   const Icon = u.icon;
                   return (

@@ -31,6 +31,11 @@ export function middleware(request: NextRequest) {
   // Propaga el nonce a los Server Components vía cabecera de petición.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(NONCE_HEADER, nonce);
+  // CLAVE: Next.js lee el nonce de la cabecera CSP de la PETICIÓN para inyectarlo
+  // automáticamente en todos sus <script> y opta la ruta a render dinámico (el
+  // nonce es por petición). Sin esto, los scripts no llevan nonce y 'strict-dynamic'
+  // los bloquea → la web no hidrata (carrito, menús, buscador y carrusel muertos).
+  requestHeaders.set('Content-Security-Policy', csp);
 
   const response = NextResponse.next({
     request: { headers: requestHeaders },

@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { Phone, Mail, User, ClipboardList, Tag, Truck } from 'lucide-react';
-import { BrandMark } from '@/components/ui/BrandMark';
-import { MegaMenu } from './MegaMenu';
-import { MobileNav } from './MobileNav';
-import { SearchAutosuggest } from './SearchAutosuggest';
+import { MarcaNG } from '@/components/ui/MarcaNG';
+import { MenuMega } from './MenuMega';
+import { NavegacionMovil } from './NavegacionMovil';
+import { BuscadorSugerencias } from './BuscadorSugerencias';
 
 /**
- * Cabecera definitiva — Server Component que compone las islas Client (MegaMenu,
- * MobileNav, SearchAutosuggest). 3 capas: topbar utility · barra principal con
+ * Cabecera definitiva — Server Component que compone las islas Client (MenuMega,
+ * NavegacionMovil, BuscadorSugerencias). 3 capas: topbar utility · barra principal con
  * BUSCADOR PROTAGONISTA · nav de departamentos con mega-menú accesible.
  * Sticky. Ver diseno-ui.md §4.4 y ux-arquitectura.md §2.
  */
@@ -21,7 +21,7 @@ const NAV_SHORTCUTS = [
   { name: 'Sanidad', slug: 'sanidad-salud-y-proteccion' },
 ];
 
-export function SiteHeader() {
+export function Cabecera() {
   return (
     <header className="sticky top-0 z-sticky-header bg-white shadow-sm">
       {/* Topbar utility */}
@@ -55,10 +55,10 @@ export function SiteHeader() {
       {/* Barra principal: logo + buscador protagonista + accesos */}
       <div className="border-b border-ink-100">
         <div className="container-ng flex h-[72px] items-center gap-3 md:gap-6">
-          <MobileNav />
+          <NavegacionMovil />
 
           <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="Núñez Gil · Inicio">
-            <BrandMark className="h-9 w-9 text-brand-700" />
+            <MarcaNG className="h-9 w-9 text-brand-700" />
             <span className="text-xl font-extrabold leading-none tracking-tight text-brand-700">
               núñez<span className="text-accent-500">gil</span>
             </span>
@@ -66,7 +66,7 @@ export function SiteHeader() {
 
           {/* Buscador protagonista (oculto en móvil; vive a fila propia abajo) */}
           <div className="hidden flex-1 md:block">
-            <SearchAutosuggest />
+            <BuscadorSugerencias />
           </div>
 
           <nav aria-label="Accesos" className="flex items-center gap-1 sm:gap-2">
@@ -96,7 +96,7 @@ export function SiteHeader() {
 
         {/* Buscador a fila propia en móvil */}
         <div className="container-ng pb-3 md:hidden">
-          <SearchAutosuggest />
+          <BuscadorSugerencias />
         </div>
       </div>
 
@@ -104,7 +104,7 @@ export function SiteHeader() {
       <div className="hidden bg-brand-700 lg:block">
         <div className="container-ng">
           <nav aria-label="Principal" className="flex items-center gap-1">
-            <MegaMenu />
+            <MenuMega />
             <ul className="flex items-center">
               {NAV_SHORTCUTS.map((s) => (
                 <li key={s.slug}>

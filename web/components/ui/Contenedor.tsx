@@ -8,6 +8,6 @@ interface ContainerProps {
 }
 
 /** Contenedor centrado (máx 1280px) con gutters responsivos. */
-export function Container({ as: Tag = 'div', children, className }: ContainerProps) {
+export function Contenedor({ as: Tag = 'div', children, className }: ContainerProps) {
   return <Tag className={cn('container-ng', className)}>{children}</Tag>;
 }

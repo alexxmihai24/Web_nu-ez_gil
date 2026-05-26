@@ -17,6 +17,7 @@ next-env.d.ts
 # QA visual y diagnóstico (capturas y scripts locales)
 web/.qa/
 web/.diag/
+web/screenshots/
 
 # Volcado del crawl: contiene un token secreto Mapbox (sk.) del proveedor antiguo
 # filtrado en el HTML del sitio viejo. NO subir. Los datos útiles ya viven en

@@ -4,7 +4,7 @@ import { limiters, clientIpFromHeaders } from '@/lib/security/rate-limit';
 import type { Category } from '@/lib/data/types';
 
 /**
- * GET /api/search?q=&limit= — autosuggest del buscador (SearchAutosuggest.tsx).
+ * GET /api/search?q=&limit= — autosuggest del buscador (BuscadorSugerencias.tsx).
  * Devuelve { items: Suggestion[] } combinando categorías (nombre) y productos.
  * Rate-limit: 30/min por IP (limiters.search, threat model S6). Degrada a [].
  */

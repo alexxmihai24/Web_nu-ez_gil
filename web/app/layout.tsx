@@ -1,8 +1,18 @@
 import type { Metadata } from 'next';
 import { Archivo, Inter } from 'next/font/google';
 import './globals.css';
-import { SiteHeader } from '@/components/layout/SiteHeader';
-import { SiteFooter } from '@/components/layout/SiteFooter';
+import { Cabecera } from '@/components/layout/Cabecera';
+import { PiePagina } from '@/components/layout/PiePagina';
+
+/**
+ * Render dinámico por petición en toda la app. Necesario porque la CSP usa un
+ * nonce nuevo por petición (ver middleware.ts): Next solo puede inyectar ese
+ * nonce en sus <script> al renderizar en cada petición. Con páginas estáticas el
+ * nonce horneado en build no coincide con el de la cabecera → 'strict-dynamic'
+ * bloquea TODO el JS y la web no hidrata. La Cabecera (menús + buscador) es
+ * interactiva en todas las rutas, así que todas necesitan este nonce.
+ */
+export const dynamic = 'force-dynamic';
 
 // Titulares: Archivo (carácter industrial). Aplicada a h1–h4 vía globals.css.
 const archivo = Archivo({
@@ -43,9 +53,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Saltar al contenido
         </a>
-        <SiteHeader />
+        <Cabecera />
         <main id="contenido">{children}</main>
-        <SiteFooter />
+        <PiePagina />
       </body>
     </html>
   );

@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { searchProducts } from '@/lib/data';
-import { Container } from '@/components/ui/Container';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Heading } from '@/components/ui/Heading';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
-import { Toolbar } from '@/components/catalog/Toolbar';
-import { Pagination } from '@/components/ui/Pagination';
-import { EmptyState } from '@/components/ui/EmptyState';
-import { UNIVERSES } from '@/components/layout/universes';
+import { Contenedor } from '@/components/ui/Contenedor';
+import { MigasDePan } from '@/components/ui/MigasDePan';
+import { Titulo } from '@/components/ui/Titulo';
+import { RejillaProductos } from '@/components/catalog/RejillaProductos';
+import { BarraHerramientas } from '@/components/catalog/BarraHerramientas';
+import { Paginacion } from '@/components/ui/Paginacion';
+import { EstadoVacio } from '@/components/ui/EstadoVacio';
+import { UNIVERSOS } from '@/components/layout/universos';
 import type { ProductQuery } from '@/lib/data/types';
 
 export const metadata: Metadata = {
@@ -53,16 +53,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   };
 
   return (
-    <Container className="py-6 lg:py-8">
-      <Breadcrumbs items={[{ name: 'Buscador' }]} />
+    <Contenedor className="py-6 lg:py-8">
+      <MigasDePan items={[{ name: 'Buscador' }]} />
 
-      <Heading level={1} size="3xl" className="mt-4">
+      <Titulo level={1} size="3xl" className="mt-4">
         {term ? <>Resultados para «{term}»</> : 'Buscador'}
-      </Heading>
+      </Titulo>
 
       {!term ? (
         <div className="mt-8">
-          <EmptyState
+          <EstadoVacio
             title="¿Qué estás buscando?"
             description="Escribe un producto, una marca o una referencia en el buscador de la cabecera."
             action={{ label: 'Ver catálogo', href: '/quimica-industrial' }}
@@ -70,22 +70,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
       ) : products.length > 0 ? (
         <div className="mt-6">
-          <Toolbar total={total} />
-          <Heading level={2} size="xl" className="sr-only">
+          <BarraHerramientas total={total} />
+          <Titulo level={2} size="xl" className="sr-only">
             Productos
-          </Heading>
-          <ProductGrid products={products} priorityCount={5} className="mt-6" />
-          <Pagination page={page} total={total} pageSize={PAGE_SIZE} buildHref={buildHref} />
+          </Titulo>
+          <RejillaProductos products={products} priorityCount={5} className="mt-6" />
+          <Paginacion page={page} total={total} pageSize={PAGE_SIZE} buildHref={buildHref} />
         </div>
       ) : (
         <div className="mt-8">
-          <EmptyState
+          <EstadoVacio
             title={`Sin resultados para «${term}»`}
             description="Revisa la ortografía o prueba con términos más generales. También puedes explorar por departamento:"
             action={{ label: 'Contactar', href: '/contacto' }}
           >
             <ul className="mt-5 flex flex-wrap justify-center gap-2">
-              {UNIVERSES.flatMap((u) => u.departments)
+              {UNIVERSOS.flatMap((u) => u.departments)
                 .slice(0, 8)
                 .map((d) => (
                   <li key={d.slug}>
@@ -98,9 +98,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   </li>
                 ))}
             </ul>
-          </EmptyState>
+          </EstadoVacio>
         </div>
       )}
-    </Container>
+    </Contenedor>
   );
 }

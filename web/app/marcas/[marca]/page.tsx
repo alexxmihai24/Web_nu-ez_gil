@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getBrands, searchProducts } from '@/lib/data';
-import { Container } from '@/components/ui/Container';
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Heading } from '@/components/ui/Heading';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
-import { Toolbar } from '@/components/catalog/Toolbar';
-import { Pagination } from '@/components/ui/Pagination';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { Contenedor } from '@/components/ui/Contenedor';
+import { MigasDePan } from '@/components/ui/MigasDePan';
+import { Titulo } from '@/components/ui/Titulo';
+import { RejillaProductos } from '@/components/catalog/RejillaProductos';
+import { BarraHerramientas } from '@/components/catalog/BarraHerramientas';
+import { Paginacion } from '@/components/ui/Paginacion';
+import { EstadoVacio } from '@/components/ui/EstadoVacio';
 import type { ProductQuery } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -73,30 +73,30 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
   };
 
   return (
-    <Container className="py-6 lg:py-8">
-      <Breadcrumbs items={[{ name: 'Marcas', href: '/marcas' }, { name: brand.name }]} />
-      <Heading level={1} size="3xl" className="mt-4">
+    <Contenedor className="py-6 lg:py-8">
+      <MigasDePan items={[{ name: 'Marcas', href: '/marcas' }, { name: brand.name }]} />
+      <Titulo level={1} size="3xl" className="mt-4">
         {brand.name}
-      </Heading>
+      </Titulo>
 
       {products.length > 0 ? (
         <div className="mt-6">
-          <Toolbar total={total} />
-          <Heading level={2} size="xl" className="sr-only">
+          <BarraHerramientas total={total} />
+          <Titulo level={2} size="xl" className="sr-only">
             Productos de {brand.name}
-          </Heading>
-          <ProductGrid products={products} priorityCount={5} className="mt-6" />
-          <Pagination page={page} total={total} pageSize={PAGE_SIZE} buildHref={buildHref} />
+          </Titulo>
+          <RejillaProductos products={products} priorityCount={5} className="mt-6" />
+          <Paginacion page={page} total={total} pageSize={PAGE_SIZE} buildHref={buildHref} />
         </div>
       ) : (
         <div className="mt-8">
-          <EmptyState
+          <EstadoVacio
             title={`Aún no mostramos productos de ${brand.name}`}
             description="Consúltanos disponibilidad y te ayudamos con tu pedido."
             action={{ label: 'Contactar', href: '/contacto' }}
           />
         </div>
       )}
-    </Container>
+    </Contenedor>
   );
 }

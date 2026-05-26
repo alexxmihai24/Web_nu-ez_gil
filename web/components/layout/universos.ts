@@ -14,20 +14,20 @@ import {
  * Los `slug` coinciden con los slugs reales de departamento del catálogo; el árbol
  * canónico lo aporta `getDepartments()`. Esta config solo define el AGRUPADOR visual.
  */
-export interface UniverseDepartment {
+export interface DepartamentoUniverso {
   name: string;
   slug: string;
 }
 
-export interface Universe {
+export interface Universo {
   id: string;
   name: string;
   icon: LucideIcon;
   /** Color de acento del icono (clase Tailwind de texto). */
-  departments: UniverseDepartment[];
+  departments: DepartamentoUniverso[];
 }
 
-export const UNIVERSES: Universe[] = [
+export const UNIVERSOS: Universo[] = [
   {
     id: 'limpieza',
     name: 'Limpieza e higiene',

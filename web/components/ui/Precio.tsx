@@ -20,7 +20,7 @@ const sizeMap = {
  * Precio destacado en `brand-900` con cifras tabulares + leyenda OBLIGATORIA
  * "I.V.A. no incluido" (decisión de cliente). Precio anterior tachado si hay oferta.
  */
-export function Price({ cents, oldCents, size = 'md', className }: PriceProps) {
+export function Precio({ cents, oldCents, size = 'md', className }: PriceProps) {
   if (cents == null) {
     return (
       <p className={cn('font-semibold text-ink-600', sizeMap[size], className)}>

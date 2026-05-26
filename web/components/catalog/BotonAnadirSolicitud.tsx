@@ -31,7 +31,7 @@ const LS_KEY = 'ng:solicitud';
  *
  * NOTA: sin dependencias nuevas — solo localStorage + CustomEvent + estado local.
  */
-export function AddToRequestButton({
+export function BotonAnadirSolicitud({
   productId,
   productSlug,
   name,

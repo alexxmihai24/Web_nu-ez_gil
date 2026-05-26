@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getCategoryBySlug, getDepartments, getProductsByCategory } from '@/lib/data';
-import { CatalogShell } from '@/components/catalog/CatalogShell';
-import { CategoryCard } from '@/components/catalog/CategoryCard';
-import { ProductGrid } from '@/components/catalog/ProductGrid';
-import { Toolbar } from '@/components/catalog/Toolbar';
-import { Pagination } from '@/components/ui/Pagination';
-import { EmptyState } from '@/components/ui/EmptyState';
-import { Heading } from '@/components/ui/Heading';
+import { MarcoCatalogo } from '@/components/catalog/MarcoCatalogo';
+import { TarjetaCategoria } from '@/components/catalog/TarjetaCategoria';
+import { RejillaProductos } from '@/components/catalog/RejillaProductos';
+import { BarraHerramientas } from '@/components/catalog/BarraHerramientas';
+import { Paginacion } from '@/components/ui/Paginacion';
+import { EstadoVacio } from '@/components/ui/EstadoVacio';
+import { Titulo } from '@/components/ui/Titulo';
 import type { ProductQuery } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -52,18 +52,18 @@ export default async function DepartmentPage({ params, searchParams }: PageProps
   // Si el departamento agrupa categorías → rejilla de CategoryCards.
   if (hasChildren) {
     return (
-      <CatalogShell
+      <MarcoCatalogo
         title={category.name}
         activeDepartment={category.slug}
         breadcrumbs={[{ name: category.name }]}
       >
-        <Heading level={2} size="xl" className="sr-only">
+        <Titulo level={2} size="xl" className="sr-only">
           Categorías
-        </Heading>
+        </Titulo>
         <ul className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
           {children.map((child, i) => (
             <li key={child.id}>
-              <CategoryCard
+              <TarjetaCategoria
                 category={child}
                 href={`/${category.slug}/${child.slug}`}
                 priority={i < 4}
@@ -72,7 +72,7 @@ export default async function DepartmentPage({ params, searchParams }: PageProps
             </li>
           ))}
         </ul>
-      </CatalogShell>
+      </MarcoCatalogo>
     );
   }
 
@@ -95,19 +95,19 @@ export default async function DepartmentPage({ params, searchParams }: PageProps
   };
 
   return (
-    <CatalogShell
+    <MarcoCatalogo
       title={category.name}
       activeDepartment={category.slug}
       breadcrumbs={[{ name: category.name }]}
     >
       {products.length > 0 ? (
         <>
-          <Toolbar total={result?.total ?? products.length} />
-          <Heading level={2} size="xl" className="sr-only">
+          <BarraHerramientas total={result?.total ?? products.length} />
+          <Titulo level={2} size="xl" className="sr-only">
             Productos
-          </Heading>
-          <ProductGrid products={products} priorityCount={5} className="mt-6" />
-          <Pagination
+          </Titulo>
+          <RejillaProductos products={products} priorityCount={5} className="mt-6" />
+          <Paginacion
             page={page}
             total={result?.total ?? products.length}
             pageSize={PAGE_SIZE}
@@ -115,12 +115,12 @@ export default async function DepartmentPage({ params, searchParams }: PageProps
           />
         </>
       ) : (
-        <EmptyState
+        <EstadoVacio
           title="Aún no hay productos en esta sección"
           description="Estamos ampliando el catálogo. Consúltanos y te ayudamos a encontrar lo que necesitas."
           action={{ label: 'Contactar', href: '/contacto' }}
         />
       )}
-    </CatalogShell>
+    </MarcoCatalogo>
   );
 }

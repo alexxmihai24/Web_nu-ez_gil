@@ -25,7 +25,7 @@ interface SearchAutosuggestProps {
  * Enter sin selección → /buscador?q=. Navegación con flechas, Esc cierra,
  * aria-activedescendant. Si el endpoint no existe todavía, degrada con elegancia.
  */
-export function SearchAutosuggest({ variant = 'header', className, autoFocus }: SearchAutosuggestProps) {
+export function BuscadorSugerencias({ variant = 'header', className, autoFocus }: SearchAutosuggestProps) {
   const router = useRouter();
   const [term, setTerm] = useState('');
   const [items, setItems] = useState<Suggestion[]>([]);
