@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ShoppingCart, Check, MessageCircleQuestion } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Availability } from '@/lib/data/types';
+import { LS_CESTA, EVENTO_CESTA, type LineaCesta } from '@/lib/solicitud/tipos';
 
 interface AddToRequestButtonProps {
   productId: string;
@@ -19,8 +20,6 @@ interface AddToRequestButtonProps {
   unavailableLabel?: string;
   className?: string;
 }
-
-const LS_KEY = 'ng:solicitud';
 
 /**
  * CTA "Añadir a la solicitud" — Client island. Persiste líneas en localStorage
@@ -70,15 +69,13 @@ export function BotonAnadirSolicitud({
 
   const handleAdd = () => {
     try {
-      const raw = localStorage.getItem(LS_KEY);
-      const lines: Array<{ id: string; slug: string; name: string; qty: number }> = raw
-        ? JSON.parse(raw)
-        : [];
+      const raw = localStorage.getItem(LS_CESTA);
+      const lines: LineaCesta[] = raw ? JSON.parse(raw) : [];
       const existing = lines.find((l) => l.id === productId);
       if (existing) existing.qty += quantity;
       else lines.push({ id: productId, slug: productSlug, name, qty: quantity });
-      localStorage.setItem(LS_KEY, JSON.stringify(lines));
-      window.dispatchEvent(new CustomEvent('ng:solicitud:update', { detail: { count: lines.length } }));
+      localStorage.setItem(LS_CESTA, JSON.stringify(lines));
+      window.dispatchEvent(new CustomEvent(EVENTO_CESTA, { detail: { count: lines.length } }));
     } catch {
       /* localStorage no disponible (modo privado) → no bloquea la UI */
     }
