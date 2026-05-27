@@ -4,6 +4,7 @@ import { MarcaNG } from '@/components/ui/MarcaNG';
 import { MenuMega } from './MenuMega';
 import { NavegacionMovil } from './NavegacionMovil';
 import { BuscadorSugerencias } from './BuscadorSugerencias';
+import { ContadorSolicitud } from './ContadorSolicitud';
 
 /**
  * Cabecera definitiva — Server Component que compone las islas Client (MenuMega,
@@ -86,9 +87,12 @@ export function Cabecera() {
             </Link>
             <Link
               href="/solicitud"
-              className="flex flex-col items-center rounded-md px-2 py-1 text-2xs font-medium text-ink-600 hover:bg-ink-100 hover:text-brand-700"
+              className="relative flex flex-col items-center rounded-md px-2 py-1 text-2xs font-medium text-ink-600 hover:bg-ink-100 hover:text-brand-700"
             >
-              <ClipboardList className="h-5 w-5" aria-hidden="true" />
+              <span className="relative">
+                <ClipboardList className="h-5 w-5" aria-hidden="true" />
+                <ContadorSolicitud />
+              </span>
               <span className="hidden sm:inline">Solicitud</span>
             </Link>
           </nav>
