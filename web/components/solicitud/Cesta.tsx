@@ -34,6 +34,7 @@ export function Cesta() {
   const [lineas, setLineas] = useState<LineaCesta[]>([]);
   const [productos, setProductos] = useState<Map<string, ProductListItem>>(new Map());
   const [montado, setMontado] = useState(false);
+  const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
     setLineas(leerCesta());
@@ -83,7 +84,28 @@ export function Cesta() {
     guardarCesta([]);
   }, []);
 
+  // Envío con éxito: muestra confirmación (distinto del vaciado manual) y limpia la cesta.
+  const alEnviar = useCallback(() => {
+    setEnviado(true);
+    setLineas([]);
+    guardarCesta([]);
+  }, []);
+
   if (!montado) return null; // evita parpadeo SSR (la cesta es per-navegador)
+
+  if (enviado) {
+    return (
+      <div role="status" className="rounded-lg border border-success/30 bg-success/5 p-8 text-center">
+        <p className="text-xl font-semibold text-ink-900">¡Solicitud enviada!</p>
+        <p className="mx-auto mt-2 max-w-md text-ink-600">
+          Gracias. Núñez Gil revisará tu solicitud y te contactará con el presupuesto lo antes posible.
+        </p>
+        <a href="/" className="mt-6 inline-block font-semibold text-brand-700 hover:underline">
+          Volver al inicio
+        </a>
+      </div>
+    );
+  }
 
   if (lineas.length === 0) {
     return (
@@ -142,7 +164,7 @@ export function Cesta() {
       </ul>
 
       <div className="rounded-lg border border-ink-200 bg-white p-6">
-        <FormularioSolicitud lineas={lineas} onEnviado={vaciar} />
+        <FormularioSolicitud lineas={lineas} onEnviado={alEnviar} />
       </div>
     </div>
   );

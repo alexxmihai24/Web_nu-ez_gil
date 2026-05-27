@@ -18,7 +18,7 @@ const INPUT =
 /** Formulario B2B de la solicitud. Envía a POST /api/solicitudes. */
 export function FormularioSolicitud({ lineas, onEnviado }: Props) {
   const [c, setC] = useState<ContactoSolicitud>(VACIO);
-  const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle');
+  const [estado, setEstado] = useState<'idle' | 'enviando' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
 
   const set =
@@ -45,24 +45,12 @@ export function FormularioSolicitud({ lineas, onEnviado }: Props) {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error ?? 'Error al enviar.');
-      setEstado('ok');
-      onEnviado();
+      onEnviado(); // el padre (Cesta) muestra la confirmación y vacía la cesta
     } catch (err) {
       setEstado('error');
       setError((err as Error).message);
     }
   };
-
-  if (estado === 'ok') {
-    return (
-      <div role="status" className="rounded-lg border border-success/30 bg-success/5 p-6 text-center">
-        <p className="text-lg font-semibold text-ink-900">¡Solicitud enviada!</p>
-        <p className="mt-1 text-sm text-ink-600">
-          Núñez Gil te contactará con el presupuesto lo antes posible.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={onSubmit} className="space-y-4" noValidate>
