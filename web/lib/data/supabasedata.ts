@@ -283,3 +283,15 @@ export async function buscarProductos(
   const items = ((data ?? []) as unknown as FilaListado[]).map(aListItem);
   return applyQuery(items, q);
 }
+
+/** Lista de productos por un conjunto de slugs (para la cesta de solicitud). */
+export async function obtenerProductosPorSlugs(slugs: string[]): Promise<ProductListItem[]> {
+  if (slugs.length === 0) return [];
+  const { data, error } = await cliente()
+    .from('productos')
+    .select(SELECT_LISTADO)
+    .eq('activo', true)
+    .in('slug', slugs);
+  if (error) throw error;
+  return ((data ?? []) as unknown as FilaListado[]).map(aListItem);
+}

@@ -69,6 +69,10 @@ function staticSearch(term: string, q?: ProductQuery): Paginated<ProductListItem
   }
   return applyQuery(base, q);
 }
+function staticProductsBySlugs(slugs: string[]): ProductListItem[] {
+  const wanted = new Set(slugs);
+  return getStore().listItems.filter((it) => wanted.has(it.slug));
+}
 
 /** Ejecuta el camino Supabase y, si lanza (p. ej. tablas aún sin crear), usa el respaldo. */
 async function conRespaldo<T>(supabasePath: () => Promise<T>, respaldo: () => T): Promise<T> {
@@ -110,4 +114,7 @@ export function getFeatured(kind: Badge): Promise<ProductListItem[]> {
 }
 export function searchProducts(term: string, q?: ProductQuery): Promise<Paginated<ProductListItem>> {
   return conRespaldo(() => sb.buscarProductos(term, q), () => staticSearch(term, q));
+}
+export function getProductsBySlugs(slugs: string[]): Promise<ProductListItem[]> {
+  return conRespaldo(() => sb.obtenerProductosPorSlugs(slugs), () => staticProductsBySlugs(slugs));
 }
