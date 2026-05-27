@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, User, ClipboardList, Tag, Truck } from 'lucide-react';
+import { Phone, Mail, ClipboardList, Tag, Truck } from 'lucide-react';
 import { MarcaNG } from '@/components/ui/MarcaNG';
 import { MenuMega } from './MenuMega';
 import { NavegacionMovil } from './NavegacionMovil';
@@ -77,13 +77,6 @@ export function Cabecera() {
             >
               <Tag className="h-5 w-5" aria-hidden="true" />
               Marcas
-            </Link>
-            <Link
-              href="/acceso"
-              className="flex flex-col items-center rounded-md px-2 py-1 text-2xs font-medium text-ink-600 hover:bg-ink-100 hover:text-brand-700"
-            >
-              <User className="h-5 w-5" aria-hidden="true" />
-              <span className="hidden sm:inline">Acceder</span>
             </Link>
             <Link
               href="/solicitud"
